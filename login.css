@@ -1,0 +1,77 @@
+*{  box-sizing:border-box;
+    background-color:#E9EFEC;
+}
+
+div{
+  	position: relative;
+	text-align: center;
+}
+
+h3{
+  	font-family:'Courier New', Courier, monospace;
+  	font-weight:bold;
+}
+
+form{
+	width:300px;
+	padding:16px;
+	border-radius:10px;
+ 	margin:auto;
+	background-color:#C4DAD2;
+}
+
+form fieldset{
+    border-radius:10px;
+    border-color: #6A9C89;
+}
+
+form legend{
+	width:auto;
+    font-family:'Courier New', Courier, monospace;
+	font-weight:bold;
+	background: transparent;
+}
+
+form input[type="text"],
+form input[type="password"]{
+	width:180px;
+	padding:3px 10px;
+	border:1px solid #f6f6f6;
+	border-radius:3px;
+	background-color:#f6f6f6;
+	margin:8px 0;
+    font-family:'Courier New', Courier, monospace;
+	display:inline-block;
+}
+
+form input[type="text"],
+form input[type="password"]:hover{
+	border-color: #f6f6f6;
+}
+
+form select{
+    font-family:'Courier New', Courier, monospace;
+    background-color:#f6f6f6;
+}
+
+form option{
+    font-family:'Courier New', Courier, monospace;
+    background-color:#f6f6f6;
+}
+
+form input[type="submit"]{
+	width:100%;
+	padding:8px 16px;
+	margin-top:32px;
+	border:1px;
+	border-radius:5px;
+	display:block;
+	color:#fff;
+	background-color:#6A9C89;
+} 
+
+form input[type="submit"]:hover{
+	cursor:pointer;
+    background-color: #16423C;
+}
+

@@ -1,0 +1,15 @@
+*{  box-sizing:border-box;
+    background-color:#E9EFEC;
+}
+
+div{
+  	position: relative;
+	text-align: center;
+}
+
+h3{
+  	font-family:'Courier New', Courier, monospace;
+  	font-weight:bold;
+}
+
+
