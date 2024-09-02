@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="login.css">
-    <title>Formulario punto 1</title>
+    <title>Login v1</title>
 </head>
 <body>
 
@@ -12,36 +12,42 @@
     <h3>Registrese</h3>
     </div>
         
-    <form action="" method="post">
+    <form action="" method="post" id="form">
     
     <fieldset><legend>Datos Personales</legend>
-    Nombre <br/>
-    <input type="text" name="nombre" value="" size="30" maxlength="25" />
+    <span>Nombre</span> <br/>
+    <input type="text" name="nombre" id="nombre" value="" size="30" maxlength="25" />
     <br/>
 
-    Apellidos <br/>
-    <input type="text" name="apellidos" value="" size="30" maxlength="25" />
+    <span>Apellidos</span> <br/>
+    <input type="text" name="apellidos" id="apellidos" value="" size="30" maxlength="25" />
     <br/>
 
-    Identificación <br/>
-    <input type="text" name="Identificación" value="" size="50" maxlength="45" />
+    <span>Identificación</span> <br/>
+    <input type="text" name="identificación" id="identificacion" value="" size="50" maxlength="45" />
     <br/>
 
     </fieldset>
     <br/>
 
     <fieldset><legend>Datos de Login</legend>
-    Nombre de usuario <br/>
-    <input type="text" name="nusuario" value="" size="30" maxlength="20">
+    <span>Nombre de usuario (Correo Electronico)</span> <br/>
+    <input type="text" name="nusuario" id="nusuario" value="" size="30" maxlength="50">
     <br/>
 
-    Contraseña <br/>
-    <input type="password" name="contrasena" value="" size="30" />
+    <span>Contraseña</span> <br/>
+    <input type="password" name="contrasena" id="contrasena" value="" size="50" />
+    <br/>
+
+    <span>Confirmar contraseña</span> <br/>
+    <input type="password" name="confirmar_contrasena" id="confirmar_contrasena" value="" size="50" />
     <br/>
     </fieldset>
     <br/>
-    <input type="submit" name="enviar" value="Guardar cambios" />
+    <input type="submit" value="Guardar cambios" />
+    <p class="warnings" id="warnings"></p>
     </form>
 
+    <script src="login.js"> </script>
     </body>
 </html>
