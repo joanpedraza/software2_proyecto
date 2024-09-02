@@ -28,13 +28,13 @@ form.addEventListener("submit", e => {
     }
 
     if(!email_Exp.test(usuario.value)){
-        warnings+='Correo Electronico No valido';
+        warnings+='Correo Electronico No valido. <br>';
         entrar=true;
     }
 
 
     if(password.value.length<8){
-        warnings+='La contraseña debe tener más de 8 caracteres'
+        warnings+='La contraseña debe tener más de 8 caracteres. <br>'
         entrar=true;
     }
 
