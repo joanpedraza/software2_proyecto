@@ -1,0 +1,18 @@
+/* styles.css */
+
+/* Definición de la paleta de colores */
+:root {
+    --color-blanco-grisaceo: #E9EFEC;
+    --color-verde-principal: #6A9C89;
+    --color-verde-grisclaro: #C4DAD2;
+    --color-verde-oscuro: #16423C;
+    --color-negro-tierra: #49433B;
+}
+
+#barra_principal {
+    background-color: var(--color-verde-grisclaro);
+}
+
+#fondo{
+    background-color: var(--color-blanco-grisaceo);
+}
