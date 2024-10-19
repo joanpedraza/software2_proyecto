@@ -1,0 +1,54 @@
+# Django specific #
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+
+# Ignore the following if using SQLite, otherwise adjust for your DB
+*.sqlite3
+
+# Python specific #
+*.py[cod]
+*$py.class
+
+# Virtual Environment #
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+env.bak/
+__pycache__/
+
+# Django migrations #
+**/migrations/
+
+# Static and media files #
+staticfiles/
+media/
+
+# IDE specific #
+.vscode/
+.idea/
+
+# Local environment variables #
+.env
+
+# Pytest cache #
+.pytest_cache/
+
+# Coverage reports #
+htmlcov/
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# MyPy #
+.mypy_cache/
+.dmypy.json
+dmypy.json
