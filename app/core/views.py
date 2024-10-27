@@ -33,3 +33,10 @@ def register(request):
             return redirect('home')
 
     return render(request, 'registration/register.html', data)
+
+
+@login_required
+def custom_login_redirect(request):
+    if request.user.is_superuser:
+        return redirect('dashboard')  
+    return redirect('home') 

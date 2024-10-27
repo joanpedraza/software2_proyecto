@@ -297,3 +297,4 @@ webpack-stats-prod.json
 package-lock.json
 
 dump.rdb
+.env
