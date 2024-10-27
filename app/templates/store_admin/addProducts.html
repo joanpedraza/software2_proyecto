@@ -1,9 +1,41 @@
 {% extends "store_admin/dashboard.html" %}
 
 {% block content %}
-    <h2>Agregue un nuevo producto</h2>
 
-    <h4>Formulario para el producto</h4>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div
+      class="bg-white p-5 rounded-5 text-secondary shadow"
+      style="width: 25rem"
+    >
+    <div class="text-center fs-2 fw-bold">Agregar producto</div>
+    <form method="post">  
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="price">Precio</label>
+            <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Cantidad</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" required>
+        </div>
+        <div class="form-group">
+            <label for="provider">Proveedor</label>
+            <select class="form-control" id="provider" name="provider" required>
+                {% for provider in providers %}
+                <option value="{{ provider.id }}">{{ provider.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Agregar</button>
+    </form>
+</div>
 
-    
 {% endblock %}

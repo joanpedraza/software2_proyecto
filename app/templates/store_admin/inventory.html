@@ -1,7 +1,37 @@
 {% extends "store_admin/dashboard.html" %}
 
 {% block content %}
-    <h2>Manejo de Inventario</h2>
+<div class="container mt-5">
+    <h2>Inventario de Productos</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Proveedor</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.provider.name }}</td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No hay productos en el inventario.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
     
 {% endblock %}

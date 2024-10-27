@@ -1,6 +1,35 @@
 {% extends "store_admin/dashboard.html" %}
 
 {% block content %}
-    <h2>Historico de pedidos</h2>
-    
+
+    <div class="container mt-5">
+        <h2>Historico de Pedidos</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Supervisor</th>
+                    <th>Cantidad Total</th>
+                    <th>Precio Total</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.customer.name }}</td>
+                    <td>{{ order.supervisor.name }}</td>
+                    <td>{{ order.total_quantity }}</td>
+                    <td>${{ order.total_price }}</td>
+                    <td>{{ order.date }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay pedidos en el historial.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}
