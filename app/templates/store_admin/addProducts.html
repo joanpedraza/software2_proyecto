@@ -8,7 +8,7 @@
       style="width: 25rem"
     >
     <div class="text-center fs-2 fw-bold">Agregar producto</div>
-    <form method="post">  
+    <form method="post" enctype="multipart/form-data">  
         {% csrf_token %}
         <div class="form-group">
             <label for="name">Nombre</label>
@@ -33,6 +33,10 @@
                 <option value="{{ provider.id }}">{{ provider.name }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="form-group">
+            <label for="image">Imagen del Producto</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Agregar</button>
     </form>

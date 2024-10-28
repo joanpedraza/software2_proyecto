@@ -19,10 +19,11 @@ def add_product(request):
         price = request.POST['price']
         quantity = request.POST['quantity']
         provider_id = request.POST['provider']
+        image = request.FILES['image']
 
         provider = Provider.objects.get(id=provider_id)
 
-        product = Product(name=name, description=description, price=price, quantity=quantity, provider=provider)
+        product = Product(name=name, description=description, price=price, quantity=quantity, provider=provider, image=image)
         product.save()
 
         return redirect('inventory')
