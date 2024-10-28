@@ -23,4 +23,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('store_admin/', include('app.store_admin.urls')),
     path('accounts/profile/', custom_login_redirect, name='custom_login_redirect'),
+    path('customers/', include('app.customers.urls')),
 ]

@@ -22,7 +22,7 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products' %}">Productos</a>
+                    <a class="nav-link" href="{% url 'products-list' %}">Productos</a>
                   </li>
                   {% if request.user.is_authenticated %}
                     <li class="nav-item">
