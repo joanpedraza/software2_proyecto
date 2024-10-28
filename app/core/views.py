@@ -31,6 +31,8 @@ def register(request):
             login(request, user)
             
             return redirect('home')
+        else:
+            data['form'] = user_creation_form
 
     return render(request, 'registration/register.html', data)
 
