@@ -5,33 +5,108 @@
   <div class="product-list">
     {% for product in products %}
       <div class="product-item">
-        <h2>{{ product.name }}</h2>
-        <p>{{ product.description }}</p>
-        <p>Precio: ${{ product.price }}</p>
-        <p>Cantidad disponible: {{ product.quantity }}</p>
-        <p>Proveedor: {{ product.provider }}</p>
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+        <div class="product-details">
+          <h2>{{ product.name }}</h2>
+          <p class="description">{{ product.description }}</p>
+          <p class="price">Precio: ${{ product.price }}</p>
+          <p class="quantity">Cantidad disponible: {{ product.quantity }}</p>
+          <p class="provider">Proveedor: {{ product.provider }}</p>
+        </div>
       </div>
     {% empty %}
       <p>No hay productos disponibles en este momento.</p>
     {% endfor %}
   </div>
+
   {% if is_paginated %}
     <div class="pagination">
-      <span class="step-links">
-        {% if page_obj.has_previous %}
-          <a href="?page=1">&laquo; primera</a>
-          <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
-        {% endif %}
+      {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+      {% endif %}
 
-        <span class="current">
-          Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-        </span>
-
-        {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
-          <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
-        {% endif %}
+      <span class="current">
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
       </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+      {% endif %}
     </div>
   {% endif %}
+{% endblock %}
+
+{% block styles %}
+<style>
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .product-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 280px;
+    transition: transform 0.2s;
+  }
+
+  .product-item:hover {
+    transform: translateY(-5px);
+  }
+
+  .product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .product-details {
+    padding: 15px;
+  }
+
+  .product-details h2 {
+    font-size: 1.25em;
+    margin: 0 0 10px;
+  }
+
+  .description, .price, .quantity, .provider {
+    font-size: 0.9em;
+    color: #555;
+    margin: 5px 0;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+  }
+
+  .pagination a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .pagination .current {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+  }
+
+  .pagination a:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+</style>
 {% endblock %}

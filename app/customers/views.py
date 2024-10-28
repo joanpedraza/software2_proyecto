@@ -10,7 +10,7 @@ class ProductListView(UserPassesTestMixin, ListView):
 
     def test_func(self):
         # Solo permite que los usuarios autenticados accedan a la tienda
-        return self.request.user.is_authenticated
+        return True #self.request.user.is_authenticated
 
     def handle_no_permission(self):
         from django.shortcuts import redirect
