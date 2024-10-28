@@ -298,3 +298,32 @@ package-lock.json
 
 dump.rdb
 .env
+
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Archivos de entorno
+.env
+
+# Directorios de compilación de Webpack
+/static/frontend/bundle.js
+/static/frontend/*.map
+/static/frontend/*.css
+
+# Node.js
+node_modules/
+yarn-error.log
+
+# Archivos de lock de Yarn (opcional)
+yarn.lock
+
+# Archivos de log
+*.log
+
+# Otros archivos generados
+coverage/
+*.egg-info/
+dist/
+build/
