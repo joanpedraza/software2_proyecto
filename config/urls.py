@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from app.core.views import custom_login_redirect
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('app.core.urls')),
@@ -25,3 +27,5 @@ urlpatterns = [
     path('accounts/profile/', custom_login_redirect, name='custom_login_redirect'),
     path('customers/', include('app.customers.urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
