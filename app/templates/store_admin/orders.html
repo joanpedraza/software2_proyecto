@@ -2,34 +2,42 @@
 
 {% block content %}
 
-    <div class="container mt-5">
-        <h2>Historico de Pedidos</h2>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Supervisor</th>
-                    <th>Cantidad Total</th>
-                    <th>Precio Total</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.customer.name }}</td>
-                    <td>{{ order.supervisor.name }}</td>
-                    <td>{{ order.total_quantity }}</td>
-                    <td>${{ order.total_price }}</td>
-                    <td>{{ order.date }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No hay pedidos en el historial.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="container mt-5">
+    <h2>Historial de Pedidos</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Supervisor</th>
+                <th>Cantidad Total</th>
+                <th>Precio Total</th>
+                <th>Fecha</th>
+                <th>Productos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.customer.user.get_full_name }}</td>
+                <td>{{ order.supervisor.user.get_username }}</td>
+                <td>{{ order.total_quantity }}</td>
+                <td>${{ order.total_price }}</td>
+                <td>{{ order.date }}</td>
+                <td>
+                    <ul>
+                        {% for product_order in order.productorder_set.all %}
+                            <li>{{ product_order.product.name }} ({{ product_order.quantity }})</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No hay pedidos en el historial.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

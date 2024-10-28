@@ -37,7 +37,7 @@ def inventory(request):
 
 @admin_required
 def order_history(request):
-    orders = Order.objects.all()  # Recupera todos los pedidos
+    orders = Order.objects.prefetch_related('productorder_set__product','customer','supervisor').all()
     return render(request, 'store_admin/orders.html', {'orders': orders})
 
 def exitAdmin(request):

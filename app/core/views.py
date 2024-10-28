@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .forms import CustomRegisterForm
 from django.contrib.auth import authenticate, login
+from app.customers.models import Customer
 
 # Create your views here.
 def home(request):
@@ -25,8 +26,9 @@ def register(request):
         user_creation_form = CustomRegisterForm(data=request.POST)
         
         if user_creation_form.is_valid():
-            user_creation_form.save()
-            
+            customer = user_creation_form.save()
+            Customer.objects.create(user=customer)
+
             user = authenticate(username=user_creation_form.cleaned_data['username'], password=user_creation_form.cleaned_data['password1'])    
             login(request, user)
             
