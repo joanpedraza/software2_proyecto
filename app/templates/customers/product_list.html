@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <h1>Lista de Productos</h1>
+  <div class="product-list">
+    {% for product in products %}
+      <div class="product-item">
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <p>Precio: ${{ product.price }}</p>
+        <p>Cantidad disponible: {{ product.quantity }}</p>
+        <p>Proveedor: {{ product.provider }}</p>
+      </div>
+    {% empty %}
+      <p>No hay productos disponibles en este momento.</p>
+    {% endfor %}
+  </div>
+  {% if is_paginated %}
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; primera</a>
+          <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+          Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
+  {% endif %}
+{% endblock %}
