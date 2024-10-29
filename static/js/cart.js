@@ -180,8 +180,9 @@ function checkout() {
 
 // Función para alternar la visualización del dropdown del carrito
 function toggleCartDropdown() {
-    const dropdown = document.getElementById('cart-dropdown');
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    const cartDropdown = document.getElementById('cart-dropdown');
+    const isVisible = cartDropdown.style.display === 'block';
+    cartDropdown.style.display = isVisible ? 'none' : 'block';
 }
 
 // Consulta inicial al cargar la página
