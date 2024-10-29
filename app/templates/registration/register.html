@@ -6,19 +6,48 @@
 
     <br>
 
-    <form action="" method="post">
-        {% csrf_token %}
-        <div class="card mx-auto" style="width: 30rem;">
-            <div class="card-body">
-              <h5 class="card-title">Complete todos los campos</h5>
-                {{ form|crispy }}
-              <a href="{% url 'home' %}" class="card-link">Inicio</a>
-              <a href="{% url 'login' %}" class="card-link">Iniciar sesion</a>
+      <!-- Global Container -->
+       <div class="flex   items-center justify-center min-h-screen">
 
-              <button type="submit" class="btn btn-sm btn-primary float-end">Registrarse</button>
-            </div>
+        <!-- Card Container -->
+        <div class="relative flex flex-col m-6 space-y-10 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0 md:m-20">
+
+          <div class="p-6 md:p-20 flex flex-col">
+
+            
+            <a href="{% url 'home' %}" class="self-end text-gray-600"><i class="fa-solid fa-x fa-lg"></i></a>
+            <h5 class="mb-5 text-4xl font-bold text-green-700">Sign Up</h5> 
+
+            <form action="" method="post">
+              {% csrf_token %}
+              
+                  
+                    
+                      {{ form|crispy }}
+                    
+      
+                    <button type="submit" class="w-full md:width-auto p-3  mb-10 font-bold  text-white rounded-md shadow-lg bg-green-700 shadow-green-100 hover:opaicty-70 shadow-sm hover:shadow-lg  hover:-translate-y-0.5 duration-150">Sign in </button>
+
+                    
+                     <span class="text-gray-500 inline-block space-x-5">Already have an account ? </span><a href="{% url 'login' %}" class="text-green-700">Log in</a>
+                  
+                
+          </form>
+
+
+
+
+
           </div>
-    </form>
+
+
+
+
+
+        </div>
     
+
+   
+  </div>
 
 {% endblock %}

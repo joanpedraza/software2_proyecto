@@ -7,6 +7,7 @@
     <title>InvenCloud</title>
     {% tailwind_css %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     {% load static %} 
      <!-- <link rel="stylesheet" href="{% static 'frontend/styles.css' %}">  -->
     
@@ -48,7 +49,7 @@
               
                   <a class="tracking-widest   no-underline text-gray-500  hover:text-green-800 " href="{% url 'register' %}">Register</a>
 
-                  <a class=" text-white px-8 py-2 no-underline bg-green-800 border-2 rounded-lg shadow-md border-green-800  hover:text-green-900 hover:bg-white    duration-300 ease-in-out" href="{% url 'login' %}">Log In</a>
+                  <a class=" text-white px-8 py-2 no-underline bg-green-800 border-2 rounded-lg shadow-md border-green-800  hover:opacity-80    duration-300 ease-in-out" href="{% url 'login' %}">Log In</a>
               
             {% endif %}
           
@@ -76,7 +77,10 @@
             <div class="w-full py-3 text-center">
               <a    class="no-underline block text-black  hover:text-green-800" href="{% url 'products-list' %}">Products</a>
             </div>
-
+             
+            <div class="w-full py-3 text-center text-white">
+              <a   class="  no-underline block hover:text-green-900"  href="{% url 'register' %}">Sign in </a>
+            </div>
 
             <div class="w-full py-3 text-center text-white">
               <a   class="  no-underline block hover:text-green-900"  href="{% url 'login' %}">Log in</a>
