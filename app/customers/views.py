@@ -78,7 +78,7 @@ def create_order(request):
     if not cart.items.exists():
         return JsonResponse({"message": "El carrito está vacío"}, status=400)
 
-    supervisor = get_object_or_404(Supervisor, user=request.user)
+    supervisor = Supervisor.objects.all().first()
 
     total_quantity = sum(item.quantity for item in cart.items.all())
     total_price = cart.total_price()

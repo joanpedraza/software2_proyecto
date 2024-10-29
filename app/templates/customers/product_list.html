@@ -1,33 +1,34 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block navbar %}
-<div class="navbar-nav">
-    <a class="nav-link position-relative" href="javascript:void(0);" onclick="toggleCartDropdown()">
-        🛒 Carrito
-        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            0
-        </span>
-    </a>
-
-    <!-- Carrito Popup -->
-    <div id="cart-dropdown" class="dropdown-menu p-3 cart-popup" style="display: none;">
-        <div class="cart-header d-flex justify-content-between align-items-center">
-            <div style="padding-top:.4rem;"><h5>Carrito de Compras</h5></div>
-            <button class="btn-close" onclick="toggleCartDropdown()"></button>
-        </div>
-        <ul id="cart-items" class="list-unstyled mb-2"></ul>
-        <div class="cart-footer">
-            <p>Total: $<span id="cart-total">0.00</span></p>
-            <button id="checkout-button" class="btn btn-primary w-100" onclick="checkout()" disabled>Ir a Pagar</button>
-        </div>        
-    </div>
-</div>
-{% endblock %}
-
-
 {% block content %}
 <input type="hidden" id="user-auth-status" value="{{ user.is_authenticated|yesno:'True,False' }}">
+<div class="w-full flex justify-between items-center p-4 max-w-4xl mx-auto"> <!-- Cambié el tamaño máximo -->
+    <h1 class="text-2xl font-bold">Productos</h1>
+    <div class="relative"> <!-- Cambié navbar-nav a relative -->
+        <a class="nav-link" href="javascript:void(0);" onclick="toggleCartDropdown()">
+            🛒
+            <span id="cart-count" class="absolute top-0 right-0 translate-x-1 -translate-y-1 badge rounded-full bg-red-600 text-white text-xs">
+                0
+            </span>
+        </a>
+
+        <!-- Carrito Popup -->
+        <div id="cart-dropdown" class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-50 hidden">
+            <div class="cart-header flex justify-between items-center mb-2">
+                <h5 class="font-semibold">Carrito de Compras</h5>
+                <button class="close-btn" onclick="toggleCartDropdown()">×</button>
+            </div>
+            <ul id="cart-items" class="list-none mb-2"></ul>
+            <div class="cart-footer">
+                <p>Total: $<span id="cart-total">0.00</span></p>
+                <button id="checkout-button" class="w-full bg-blue-600 text-white rounded-lg py-2" onclick="checkout()" disabled>Ir a Pagar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
   <div class="bg-gray-100 w-full min-h-screen gap-6 flex-wrap flex justify-center items-center">
     {% for product in products %}
       <div class="w-60 p-2 bg-white rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg  hover:shadow-2xl mt-4 mb-4 lg:mt-0">
