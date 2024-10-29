@@ -11,7 +11,7 @@
 
    
 </head>
-<body>
+<body class="bg-white">
 
     
 
@@ -33,7 +33,7 @@
            <div class="hidden items-center space-x-10 uppercase text-gray-500 md:flex">
 
                
-           <!--  <a class="tracking-widest no-underline text-gray-500 hover:text-green-800"  href="{% url 'home' %}">Inicio</a> -->
+            <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Inicio</a>
                 
                 
             <a class=" tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'add_product' %}">Agregar Productos</a>
@@ -74,24 +74,30 @@
          <!-- Mobile Menu  -->
 
 
-         <div id="mobile-menu" class="fixed inset-0 z-20 hidden flex-col  justify-center items-center self-end w-full h-full m-h-screen px-6 py-1 pt-24 pb-4 tracking-widest text-white uppercase divide-y divide-gray-500  bg-[#dff9de] opacity-40">
+         <div id="mobile-menu" class="fixed inset-0 z-20 hidden flex-col  justify-center items-center self-end w-full h-full m-h-screen px-6 py-1 pt-24 pb-4 tracking-widest text-white uppercase divide-y divide-gray-500  bg-gray-700 opacity-90">
+
+
+          <div class="w-full py-3 text-center text-white">
+            <a class="tracking-widest no-underline text-gray-300 hover:text-white" aria-current="page" href="{% url 'dashboard' %}">Inicio</a>
+          </div>
+
             
           <div class="w-full py-3 text-center">
-            <a class=" tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'add_product' %}">Agregar Productos</a>
+            <a class=" tracking-widest no-underline text-gray-300 hover:text-white" href="{% url 'add_product' %}">Agregar Productos</a>
           </div>
 
 
           <div class="w-full py-3 text-center text-white">
-            <a class=" tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'inventory' %}">Ver Inventario</a>
+            <a class=" tracking-widest no-underline text-gray-300 hover:text-white" href="{% url 'inventory' %}">Ver Inventario</a>
           </div>
 
           <div class="w-full py-3 text-center text-white">
-            <a class=" tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'order_history' %}">Historial de Pedidos</a>
+            <a class=" tracking-widest no-underline text-gray-300 hover:text-white" href="{% url 'order_history' %}">Historial de Pedidos</a>
           </div>
 
 
           <div class="w-full py-3 text-center text-white">
-            <a class="tracking-widest text-gray-500 hover:text-green-800" href="{% url 'exit' %}">Cerrar sesion</a>
+            <a class="tracking-widest text-gray-300 hover:text-white" href="{% url 'exit' %}">Cerrar sesion</a>
           </div>
 
 
@@ -102,14 +108,16 @@
 
         </nav>
 
-        
+       {% block scripts %}
+        <script src="{% static 'frontend/bundle.js' %}"></script>
+        {% endblock %} 
 
           {% block content %}
             
           
-         <!--  <h2>Bienvenido {{user.username | upper}}</h2>
+           <h2>Bienvenido {{user.username | upper}}</h2>
           
-          <h4>¿Que desea hacer hoy?</h4> -->
+          <h4>¿Que desea hacer hoy?</h4> 
 
           {% endblock %}
     
