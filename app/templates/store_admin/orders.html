@@ -2,34 +2,41 @@
 
 {% block content %}
 
-    <div class="container mt-5">
-        <h2>Historico de Pedidos</h2>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Supervisor</th>
-                    <th>Cantidad Total</th>
-                    <th>Precio Total</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.customer.name }}</td>
-                    <td>{{ order.supervisor.name }}</td>
-                    <td>{{ order.total_quantity }}</td>
-                    <td>${{ order.total_price }}</td>
-                    <td>{{ order.date }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No hay pedidos en el historial.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
+<div class="p-5  rounded-lg">
+    <h2 class="text-lg mb-5">Pedidos</h2>
+<div class="overflow-auto rounded-lg shadow ">
+    
+    <table class="w-full">
+        <thead class="bg-gray-50 border-b-2 border-gray-200">
+            <tr>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-900">Cliente</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Supervisor</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Cantidad Total</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Precio Total</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Fecha</th>
+                
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for order in orders %}
+            <tr class="{% if forloop.counter|divisibleby:2 %}bg-gray-100{% else %}bg-white{% endif %}">
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.customer.name }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.supervisor.name }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">${{ order.total_quantity }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.total_price }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.date }}</td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No hay productos en el inventario.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+    
 {% endblock %}
