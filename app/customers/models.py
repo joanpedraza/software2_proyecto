@@ -1,6 +1,8 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from djmoney.money import Money
 
 from app.store_admin.models import Product, Supervisor
 
@@ -27,3 +29,19 @@ class ProductOrder(models.Model):
 
     def __str__(self):
         return f'{self.product.name} in Order {self.order.id}'
+    
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def total_price(self):
+        total_amount = sum(item.product.price * item.quantity for item in self.items.all())
+        return total_amount if total_amount else Money(Decimal(0), 'COP')
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def total_price(self):
+        return self.product.price * self.quantity

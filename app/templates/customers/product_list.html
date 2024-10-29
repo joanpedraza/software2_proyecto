@@ -1,6 +1,31 @@
 {% extends "core/base.html" %}
 {% load static %}
 
+{% block navbar %}
+<div class="navbar-nav">
+    <a class="nav-link position-relative" href="javascript:void(0);" onclick="toggleCartDropdown()">
+        🛒 Carrito
+        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            0
+        </span>
+    </a>
+
+    <!-- Carrito Popup -->
+    <div id="cart-dropdown" class="dropdown-menu p-3 cart-popup" style="display: none;">
+        <div class="cart-header d-flex justify-content-between align-items-center">
+            <div style="padding-top:.4rem;"><h5>Carrito de Compras</h5></div>
+            <button class="btn-close" onclick="toggleCartDropdown()"></button>
+        </div>
+        <ul id="cart-items" class="list-unstyled mb-2"></ul>
+        <div class="cart-footer">
+            <p>Total: $<span id="cart-total">0.00</span></p>
+            <button class="btn btn-primary w-100" onclick="checkout()" disabled>Ir a Pagar</button>
+        </div>        
+    </div>
+</div>
+{% endblock %}
+
+
 {% block content %}
   
   <div class="bg-gray-100 w-full min-h-screen gap-6 flex-wrap flex justify-center items-center">
@@ -9,7 +34,7 @@
         {% if product.image %}
           <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">
         {% else %}
-          <img src="{% static 'default_image.png' %}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">  <!-- Cambia a una imagen por defecto -->
+          <img src="{% static 'images/default_product.svg' %}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">  <!-- Cambia a una imagen por defecto -->
         {% endif %}
         <div class="p-2">
           <h2 class="font-bold text-lg mb-2">{{ product.name }}</h2>
@@ -22,35 +47,30 @@
         <div class="flex items-center justify-center gap-2 mb-2">
           <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80"><i class="fa-solid fa-plus fa-lg text-white"></i></button>
         </div>
-      </div>
     {% empty %}
-      <p>No hay productos disponibles en este momento.</p>
+        <p>No hay productos disponibles en este momento.</p>
     {% endfor %}
-  </div>
+</div>
 
-  <div class="cart-icon">
-    <img src="{% static 'cart_icon.png' %}" alt="Carrito" id="cart-icon" />
-    <span id="cart-count">0</span>
-  </div>
+{% if is_paginated %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
 
-  {% if is_paginated %}
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; primera</a>
-        <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
-      {% endif %}
-
-      <span class="current">
+    <span class="current">
         Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-      </span>
+    </span>
 
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
-      {% endif %}
-    </div>
-  {% endif %}
-  {% comment %} {% block scripts %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block page_scripts %}
     <script src="{% static 'js/cart.js' %}"></script>
-  {% endblock %} {% endcomment %}
 {% endblock %}
