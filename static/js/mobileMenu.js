@@ -1,8 +1,5 @@
-// frontend/src/index.js
-import './styles/style.scss'; // Asegúrate de tener un archivo SCSS
-
-const btn = document.getElementById('hamburger-menu-btn')
-const mobileMenu= document.getElementById('mobile-menu')
+const btn = document.querySelectorById('hamburger-menu-btn')
+const  mobileMenu= document.querySelectorById('mobile-menu')
 
 /* Hamburger Menu Listener  */
 
@@ -16,7 +13,6 @@ function navToggle(){
 btn.classList.toggle('open')
 mobileMenu.classList.toggle('hidden')
 mobileMenu.classList.toggle('flex')
-
+alert('menu')
 
 }
-

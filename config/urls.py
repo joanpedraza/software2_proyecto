@@ -26,6 +26,7 @@ urlpatterns = [
     path('store_admin/', include('app.store_admin.urls')),
     path('accounts/profile/', custom_login_redirect, name='custom_login_redirect'),
     path('customers/', include('app.customers.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
