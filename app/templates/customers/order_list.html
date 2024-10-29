@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="p-5 rounded-lg">
+    <h2 class="text-lg mb-5">Pedidos</h2>
+    <div class="overflow-auto rounded-lg shadow">
+        <table class="w-full">
+            <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                    <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-900">Cliente</th>
+                    <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-900">Supervisor</th>
+                    <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-900">Cantidad Total</th>
+                    <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-900">Precio Total</th>
+                    <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-900">Fecha</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for order in orders %}
+                <tr class="{% if forloop.counter|divisibleby:2 %}bg-gray-100{% else %}bg-white{% endif %}">
+                    <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.customer.user.username }}</td> <!-- Cambiado para mostrar el nombre de usuario -->
+                    <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.supervisor.user.username }}</td> <!-- Cambiado para mostrar el nombre de usuario -->
+                    <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.total_quantity }}</td>
+                    <td class="p-3 text-sm text-gray-700 whitespace-nowrap">${{ order.total_price }}</td>
+                    <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.date }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No tienes pedidos realizados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import Cart, CartItem, Product
+from .models import Cart, CartItem, Order, Product, ProductOrder, Supervisor
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 class ProductListView(UserPassesTestMixin, ListView):
     model = Product
@@ -69,3 +71,47 @@ def update_cart_item(request, product_id):
     cart_item.save()
  
     return JsonResponse({"message": "Cantidad actualizada en el carrito"})
+
+@login_required
+def create_order(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    if not cart.items.exists():
+        return JsonResponse({"message": "El carrito está vacío"}, status=400)
+
+    supervisor = get_object_or_404(Supervisor, user=request.user)
+
+    total_quantity = sum(item.quantity for item in cart.items.all())
+    total_price = cart.total_price()
+
+    order = Order.objects.create(
+        customer=request.user.customer,
+        supervisor=supervisor,
+        total_quantity=total_quantity,
+        total_price=total_price.amount,
+        date=timezone.now().date()
+    )
+
+    for item in cart.items.all():
+        ProductOrder.objects.create(
+            product=item.product,
+            order=order,
+            quantity=item.quantity
+        )
+
+    cart.items.all().delete()
+
+    return JsonResponse({"message": "Pedido creado exitosamente", "order_id": order.id, "redirect_url": reverse('order_list')})
+class OrderListView(UserPassesTestMixin, ListView):
+    model = Order
+    template_name = 'customers/order_list.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        return Order.objects.filter(customer=self.request.user.customer)
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        from django.shortcuts import redirect
+        return redirect('login')

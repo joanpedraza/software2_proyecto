@@ -156,7 +156,26 @@ function updateCartDisplay() {
 
 // Función para iniciar el proceso de pago
 function checkout() {
-    alert("Proceso de pago iniciado");
+    fetch('/customers/create_order/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al crear el pedido');
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        window.location.href = data.redirect_url;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 // Función para alternar la visualización del dropdown del carrito
