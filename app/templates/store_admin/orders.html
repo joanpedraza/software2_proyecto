@@ -21,16 +21,16 @@
         <tbody class="divide-y divide-gray-100">
             {% for order in orders %}
             <tr class="{% if forloop.counter|divisibleby:2 %}bg-gray-100{% else %}bg-white{% endif %}">
-                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.customer.name }}</td>
-                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.supervisor.name }}</td>
-                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">${{ order.total_quantity }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.customer.user.get_full_name }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.supervisor.user.get_username }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.total_quantity }}</td>
                 <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.total_price }}</td>
                 <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.date }}</td>
 
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" class="text-center">No hay productos en el inventario.</td>
+                <td colspan="6" class="text-center">No hay pedidos.</td>
             </tr>
             {% endfor %}
         </tbody>
