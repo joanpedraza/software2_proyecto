@@ -101,6 +101,7 @@ function updateCartDisplay() {
         const cartItemsContainer = document.getElementById("cart-items");
         const cartCount = document.getElementById("cart-count");
         const cartTotal = document.getElementById("cart-total");
+        const checkoutButton = document.getElementById("checkout-button");
 
         // Limpiar el contenedor antes de insertar nuevos elementos
         cartItemsContainer.innerHTML = "";

@@ -19,7 +19,7 @@
         <ul id="cart-items" class="list-unstyled mb-2"></ul>
         <div class="cart-footer">
             <p>Total: $<span id="cart-total">0.00</span></p>
-            <button class="btn btn-primary w-100" onclick="checkout()" disabled>Ir a Pagar</button>
+            <button id="checkout-button" class="btn btn-primary w-100" onclick="checkout()" disabled>Ir a Pagar</button>
         </div>        
     </div>
 </div>
@@ -27,7 +27,7 @@
 
 
 {% block content %}
-  
+<input type="hidden" id="user-auth-status" value="{{ user.is_authenticated|yesno:'True,False' }}">
   <div class="bg-gray-100 w-full min-h-screen gap-6 flex-wrap flex justify-center items-center">
     {% for product in products %}
       <div class="w-60 p-2 bg-white rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg  hover:shadow-2xl mt-4 mb-4 lg:mt-0">
@@ -45,7 +45,11 @@
         </div>
 
         <div class="flex items-center justify-center gap-2 mb-2">
-          <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80"><i class="fa-solid fa-plus fa-lg text-white"></i></button>
+            {% if user.is_authenticated %}
+            <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80" onclick="addToCart({{ product.id }})" ><i class="fa-solid fa-plus fa-lg text-white"></i></button>
+            {% else %}
+                <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80" onclick="location.href='{% url 'login' %}'"><i class="fa-solid fa-plus fa-lg text-white"></i></button>
+            {% endif %}
         </div>
     </div>
     {% empty %}
