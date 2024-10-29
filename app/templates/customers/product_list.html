@@ -1,52 +1,76 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block content %}
-  <h1>Lista de Productos</h1>
-  <div class="product-list">
-    {% for product in products %}
-      <div class="product-item">
-        {% if product.image %}
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-        {% else %}
-          <img src="{% static 'default_image.png' %}" alt="{{ product.name }}" class="product-image">  <!-- Cambia a una imagen por defecto -->
-        {% endif %}
-        <div class="product-details">
-          <h2>{{ product.name }}</h2>
-          {% comment %} <p class="description">{{ product.description }}</p> {% endcomment %}
-          <p class="price">Precio: ${{ product.price }}</p>
-          <p class="quantity">Cantidad disponible: {{ product.quantity }}</p>
-          {% comment %} <p class="provider">Proveedor: {{ product.provider }}</p> {% endcomment %}
+{% block navbar %}
+<div class="navbar-nav">
+    <a class="nav-link position-relative" href="javascript:void(0);" onclick="toggleCartDropdown()">
+        🛒 Carrito
+        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            0
+        </span>
+    </a>
+
+    <!-- Carrito Popup -->
+    <div id="cart-dropdown" class="dropdown-menu p-3 cart-popup" style="display: none;">
+        <div class="cart-header d-flex justify-content-between align-items-center">
+            <div style="padding-top:.4rem;"><h5>Carrito de Compras</h5></div>
+            <button class="btn-close" onclick="toggleCartDropdown()"></button>
         </div>
-      </div>
-    {% empty %}
-      <p>No hay productos disponibles en este momento.</p>
-    {% endfor %}
-  </div>
-
-  <div class="cart-icon">
-    <img src="{% static 'cart_icon.png' %}" alt="Carrito" id="cart-icon" />
-    <span id="cart-count">0</span>
-  </div>
-
-  {% if is_paginated %}
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; primera</a>
-        <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
-      {% endif %}
-
-      <span class="current">
-        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-      </span>
-
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
-      {% endif %}
+        <ul id="cart-items" class="list-unstyled mb-2"></ul>
+        <div class="cart-footer">
+            <p>Total: $<span id="cart-total">0.00</span></p>
+            <button class="btn btn-primary w-100" onclick="checkout()" disabled>Ir a Pagar</button>
+        </div>        
     </div>
-  {% endif %}
-  {% comment %} {% block scripts %}
+</div>
+{% endblock %}
+
+
+{% block content %}
+<h1>Lista de Productos</h1>
+<input type="hidden" id="user-auth-status" value="{{ user.is_authenticated|yesno:'True,False' }}">
+<div class="product-list d-flex flex-wrap">
+    {% for product in products %}
+        <div class="product-item card m-2" style="width: 200px;">
+            <div class="card-body">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'img/default_product.svg' %}" alt="{{ product.name }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                {% endif %}
+                <h5 class="card-title mt-2">{{ product.name }}</h5>
+                <p class="price">Precio: ${{ product.price }}</p>
+                {% if user.is_authenticated %}
+                    <button class="btn btn-primary w-100" onclick="addToCart({{ product.id }})">Agregar al Carrito</button>
+                {% else %}
+                    <button class="btn btn-primary w-100" onclick="location.href='{% url 'login' %}'">Agregar al Carrito</button>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay productos disponibles en este momento.</p>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+
+    <span class="current">
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block page_scripts %}
     <script src="{% static 'js/cart.js' %}"></script>
-  {% endblock %} {% endcomment %}
 {% endblock %}

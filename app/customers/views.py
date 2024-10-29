@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import Product
+from .models import Cart, CartItem, Product
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 class ProductListView(UserPassesTestMixin, ListView):
     model = Product
@@ -19,20 +20,52 @@ class ProductListView(UserPassesTestMixin, ListView):
         print("NO HAY PERMISOS")
         return redirect('login')
 
-def agregar_al_carrito(request, product_id):
+def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += 1
+    cart_item.save()
+    return JsonResponse({"message": "Producto agregado al carrito"})
 
-    carrito = request.session.get('carrito', {})
+def view_cart(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
     
-    if str(product.id) not in carrito:
-        carrito[str(product.id)] = {
-            'name': product.name,
-            'price': str(product.price),
-            'quantity': 1
+    items = [
+        {
+            "product_id": item.product.id,
+            "name": item.product.name,
+            "quantity": item.quantity,
+            "total_price_currency": str(item.total_price().currency),
+            "total_price_amount": str(round(item.total_price().amount,0))
         }
-    else:
-        carrito[str(product.id)]['quantity'] += 1
-    
-    request.session['carrito'] = carrito
+        for item in cart.items.all()
+    ]
 
-    return JsonResponse({'message': 'Producto agregado al carrito', 'cart_count': len(carrito)})
+    return JsonResponse({
+        "items": items,
+        "totals_amount": str(round(cart.total_price().amount,0)),
+        "totals_currency": str(cart.total_price().currency) if cart.total_price().currency else "COP",
+    })
+
+def remove_from_cart(request, product_id):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_item = get_object_or_404(CartItem, cart=cart, product_id=product_id)
+    cart_item.delete()
+    return JsonResponse({"message": "Producto eliminado del carrito"})
+
+def update_cart_item(request, product_id):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_item = get_object_or_404(CartItem, cart=cart, product_id=product_id)
+    quantity_change = int(request.GET.get("quantity", 1))
+    new_quantity = cart_item.quantity + quantity_change
+
+    if new_quantity <= 0:
+        cart_item.delete()
+        return JsonResponse({"message": "Cantidad actualizada en el carrito"})
+
+    cart_item.quantity = new_quantity
+    cart_item.save()
+ 
+    return JsonResponse({"message": "Cantidad actualizada en el carrito"})
