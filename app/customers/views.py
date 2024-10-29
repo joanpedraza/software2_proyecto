@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import Cart, CartItem, Order, Product, ProductOrder, Supervisor
+from .models import Cart, CartItem, Customer, Order, Product, ProductOrder, Supervisor
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -79,12 +79,13 @@ def create_order(request):
         return JsonResponse({"message": "El carrito está vacío"}, status=400)
 
     supervisor = Supervisor.objects.all().first()
+    customer = Customer.objects.filter(user=request.user).first()
 
     total_quantity = sum(item.quantity for item in cart.items.all())
     total_price = cart.total_price()
 
     order = Order.objects.create(
-        customer=request.user.customer,
+        customer=customer,
         supervisor=supervisor,
         total_quantity=total_quantity,
         total_price=total_price.amount,
