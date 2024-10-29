@@ -1,27 +1,31 @@
 {% extends "store_admin/dashboard.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Inventario de Productos</h2>
-    <table class="table table-bordered table-hover">
-        <thead>
+
+
+<div class="p-5  rounded-lg">
+    <h2 class="text-lg mb-5 font-semibold text-gray-500">Productos</h2>
+<div class="overflow-auto rounded-lg shadow ">
+    
+    <table class="w-full">
+        <thead class="bg-gray-50 border-b-2 border-gray-200">
             <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Proveedor</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left text-green-700">Nombre</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-700">Descripción</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-700">Precio</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-700">Cantidad</th>
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-700">Proveedor</th>
                 
             </tr>
         </thead>
-        <tbody>
+        <tbody class="divide-y divide-gray-100">
             {% for product in products %}
-            <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>${{ product.price }}</td>
-                <td>{{ product.quantity }}</td>
-                <td>{{ product.provider.name }}</td>
+            <tr class="{% if forloop.counter|divisibleby:2 %}bg-gray-100{% else %}bg-white{% endif %}">
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ product.name }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ product.description }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">${{ product.price }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ product.quantity }}</td>
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ product.provider.name }}</td>
 
             </tr>
             {% empty %}
@@ -31,6 +35,7 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 </div>
 
     
