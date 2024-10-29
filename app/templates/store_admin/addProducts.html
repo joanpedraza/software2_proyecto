@@ -1,4 +1,4 @@
-{% extends "store_admin/dashboard.html" %}
+c{% extends "store_admin/dashboard.html" %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
     
         <div class="p-6 md:p-20">
             <h2 class="mb-10 text-4xl font-bold text-green-700">Añadir Producto</h2>
-            <form  class="relative bottom-5"  method="post">  
+            <form  class="relative bottom-5"  method="post" enctype="multipart/form-data">  
                 {% csrf_token %}
                 <div class="form-group my-5">
                     <label for="name" class="my-5">Nombre</label>
