@@ -15,7 +15,7 @@
                 <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Cantidad Total</th>
                 <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Precio Total</th>
                 <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Fecha</th>
-                
+                <th class="w-24 p-3 text-sm font-semibold tracking-widest text-left  text-green-900">Productos</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
@@ -26,7 +26,13 @@
                 <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.total_quantity }}</td>
                 <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.total_price }}</td>
                 <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ order.date }}</td>
-
+                <td class="p-3 text-sm text-gray-700 whitespace-nowrap">
+                    <ul>
+                        {% for product_order in order.productorder_set.all %}
+                            <li>{{ product_order.product.name }} ({{ product_order.quantity }})</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
             {% empty %}
             <tr>
