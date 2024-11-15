@@ -31,33 +31,40 @@
     </div>
 </div>
 
-  <div class="bg-gray-100 w-full gap-6 flex-wrap flex justify-center items-center">
-    {% for product in products %}
-      <div class="w-60 p-2 bg-white rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg  hover:shadow-2xl mt-4 mb-4 lg:mt-0">
-        {% if product.image %}
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">
-        {% else %}
-          <img src="{% static 'images/default_product.svg' %}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">  <!-- Cambia a una imagen por defecto -->
-        {% endif %}
-        <div class="p-2">
-          <h2 class="font-bold text-lg mb-2">{{ product.name }}</h2>
-          {% comment %} <p class="description">{{ product.description }}</p> {% endcomment %}
-          <p class="text-sm font-semibold"> ${{ product.price }}</p>
-          <p class="text-sm font-semibold"> disponible: {{ product.quantity }}</p>
-           <p class="text-sm font-semibold">Proveedor: {{ product.provider }}</p> 
-        </div>
+<div class="bg-gray-100 w-full flex justify-center">
+    <div class="max-w-7xl w-full flex flex-wrap gap-6 justify-center"> <!-- Contenedor centrado y con ancho máximo -->
+        {% for product in products %}
+            <div class="w-60 p-2 bg-white rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl mt-4 mb-4 lg:mt-0">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">
+                {% else %}
+                    <img src="{% static 'images/default_product.svg' %}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">  <!-- Cambia a una imagen por defecto -->
+                {% endif %}
+                <div class="p-2">
+                    <h2 class="font-bold text-lg mb-2">{{ product.name }}</h2>
+                    <p class="text-sm font-semibold"> ${{ product.price }}</p>
+                    <p class="text-sm font-semibold"> disponible: {{ product.quantity }}</p>
+                    <p class="text-sm font-semibold">Proveedor: {{ product.provider }}</p> 
+                </div>
 
-        <div class="flex items-center justify-center gap-2 mb-2">
-            {% if user.is_authenticated %}
-            <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80" onclick="addToCart({{ product.id }})" ><i class="fa-solid fa-plus fa-lg text-white"></i></button>
-            {% else %}
-                <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80" onclick="location.href='{% url 'login' %}'"><i class="fa-solid fa-plus fa-lg text-white"></i></button>
-            {% endif %}
-        </div>
+                <div class="flex items-center justify-center gap-2 mb-2">
+                    {% if user.is_authenticated %}
+                        <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80" onclick="addToCart({{ product.id }})">
+                            <i class="fa-solid fa-plus fa-lg text-white"></i>
+                        </button>
+                    {% else %}
+                        <button class="px-3 py-1 rounded-lg bg-green-700 hover:opacity-80" onclick="location.href='{% url 'login' %}'">
+                            <i class="fa-solid fa-plus fa-lg text-white"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p>No hay productos disponibles en este momento.</p>
+        {% endfor %}
     </div>
-    {% empty %}
-        <p>No hay productos disponibles en este momento.</p>
-    {% endfor %}
+</div>
+
 </div>
 
 {% if is_paginated %}

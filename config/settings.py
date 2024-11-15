@@ -66,7 +66,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-NPM_BIN_PATH="C:/Program Files/nodejs/npm.cmd"
+NPM_BIN_PATH=env("NPM_BIN_PATH", default="C:/Program Files/nodejs/npm.cmd" )
 
 
 MIDDLEWARE = [

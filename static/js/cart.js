@@ -170,7 +170,7 @@ function checkout() {
         return response.json();
     })
     .then(data => {
-        alert(data.message);
+        console.log(data.message);
         window.location.href = data.redirect_url;
     })
     .catch(error => {
