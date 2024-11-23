@@ -1,42 +1,47 @@
-FROM python:3.11.10-alpine3.20
+# Base de Python
+FROM python:3.11-slim
+
+# Establecer directorio de trabajo
+WORKDIR /app
 
 # Variables de entorno
-ENV PYTHONUNBUFFERED=1
-ARG APP_HOME=/app
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV BUILD_ENV ${BUILD_ENVIRONMENT}
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    BUILD_ENV=production
 
-WORKDIR ${APP_HOME}
-
-# Actualizar paquetes del sistema e instalar dependencias necesarias
-RUN apk update && apk add --no-cache \
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    musl-dev \
-    postgresql-dev \
-    python3-dev \
-    libffi-dev \
+    build-essential \
+    libpq-dev \
     curl \
     nodejs \
     npm \
-    git \
-    g++ \
-    make && \
-    pip install --upgrade pip
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias de Python desde requirements.txt
-COPY ./production.txt ./
-RUN pip install -r production.txt && pip install gunicorn
+# Actualizar pip e instalar Gunicorn
+RUN pip install --upgrade pip
 
+# Instalar Yarn
 RUN npm install -g yarn
 
-# Copiar el código de la aplicación al contenedor
-COPY ./ ./
+# Copiar dependencias de Python
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Configurar el comando predeterminado
-CMD ["sh", "entrypoint.sh"]
+# Copiar el resto del proyecto
+COPY . .
 
-# Descomenta para ejecutar directamente Django
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Instalar dependencias de Node.js y compilar Tailwind
+RUN yarn install
+RUN yarn run build
 
+# Recoger archivos estáticos
+RUN python manage.py collectstatic --noinput
 
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Configuración del puerto
+EXPOSE 8000
+
+# Comando de inicio
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
