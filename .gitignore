@@ -317,7 +317,6 @@ node_modules/
 yarn-error.log
 
 # Archivos de lock de Yarn (opcional)
-yarn.lock
 
 # Archivos de log
 *.log
