@@ -1,0 +1,4 @@
+-r ./requirements.txt
+
+uvicorn==0.23.2  # https://github.com/encode/uvicorn
+gunicorn==21.2.0  # https://github.com/benoitc/gunicorn
