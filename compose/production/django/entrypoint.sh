@@ -11,5 +11,11 @@ python manage.py migrate
 # Recoger archivos estáticos
 python manage.py collectstatic --noinput
 
+# Instalar gunicorn si no está instalado
+if ! pip show gunicorn > /dev/null 2>&1; then
+    echo "Instalando Gunicorn..."
+    pip install gunicorn
+fi
+
 # Ejecutar gunicorn con el archivo WSGI de tu proyecto
 exec gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
