@@ -50,7 +50,7 @@ RUN yarn install --frozen-lockfile
 RUN yarn run build
 
 # Cambiar de nuevo al directorio de trabajo principal
-WORKDIR /app
+WORKDIR /app/frontend
 
 # Copia el package.json y yarn.lock del frontend
 COPY ./package.json ./yarn.lock ./
