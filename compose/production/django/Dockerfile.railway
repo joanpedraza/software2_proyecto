@@ -39,8 +39,8 @@ WORKDIR /app
 # Copiar archivos necesarios para Tailwind
 COPY ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./theme/static_src/package.json ./yarn.lock ./
 
-# Instalar dependencias de Node.js
-RUN yarn install --frozen-lockfile
+# Instalar dependencias de Node.js --frozen-lockfiles
+RUN yarn install 
 
 # Copiar estilos y compilar Tailwind
 COPY ./static ./static
