@@ -34,17 +34,26 @@ FROM node:18-alpine AS node-build
 WORKDIR /app
 
 # Copiar archivos necesarios para Tailwind
-COPY ./theme/static_src/package.json ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./yarn.lock ./theme/static_src/
-
-# Copiar los archivos de los estilos (asegúrate de que la carpeta "static_src" contenga styles.css u otros archivos relevantes)
+COPY ./theme/static_src/package.json ./theme/static_src/
+COPY ./theme/static_src/postcss.config.js ./theme/static_src/
+COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
 COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
-# Instalar dependencias de Node.js --frozen-lockfile
+# Instalar dependencias de Node.js
 RUN yarn install --frozen-lockfile
 
 # Ejecutar la construcción de Tailwind
-WORKDIR /
 RUN yarn run build
+
+# ---- Etapa para SCSS ---- #
+# Copia el package.json y yarn.lock del frontend
+COPY ./package.json ./yarn.lock ./
+
+# Instalar dependencias de Node.js para SCSS
+RUN yarn install --frozen-lockfile
+
+# Ejecutar la construcción de SCSS
+RUN yarn run build:scss # Asegúrate de tener un script en package.json para esto
 
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
@@ -52,7 +61,7 @@ COPY ./static ./static
 # ---- Finalizar imagen ---- #
 FROM python-base
 
-# Copiar archivos compilados de Node.js (Tailwind)
+# Copiar archivos compilados de Node.js (Tailwind y SCSS)
 COPY --from=node-build /app/static /app/static
 
 # Copiar el resto del proyecto
@@ -66,4 +75,3 @@ EXPOSE 8000
 
 # Comando de inicio
 CMD ["sh", "/compose/production/django/entrypoint.sh"]
-
