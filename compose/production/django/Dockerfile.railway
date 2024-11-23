@@ -31,7 +31,7 @@ RUN pip install --no-cache-dir -r production.txt
 FROM node:16-alpine AS node-build
 
 # Instalar Yarn
-RUN npm install -g yarn
+RUN npm install -g yarn --force
 
 # Establecer directorio de trabajo
 WORKDIR /app
