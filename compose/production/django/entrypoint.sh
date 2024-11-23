@@ -17,5 +17,7 @@ if ! pip show gunicorn > /dev/null 2>&1; then
     pip install gunicorn
 fi
 
+PORT=${PORT:-8000} 
+
 # Ejecutar gunicorn con el archivo WSGI de tu proyecto
 exec gunicorn config.wsgi:application --bind 0.0.0.0:$PORT

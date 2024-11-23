@@ -27,6 +27,8 @@ RUN apk update && apk add --no-cache \
 COPY ./production.txt ./
 RUN pip install -r production.txt && pip install gunicorn
 
+RUN npm install -g yarn
+
 # Copiar el código de la aplicación al contenedor
 COPY ./ ./
 
