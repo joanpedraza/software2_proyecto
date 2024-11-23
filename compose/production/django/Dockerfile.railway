@@ -26,12 +26,15 @@ RUN pip install --upgrade pip
 # Instalar Yarn
 RUN npm install -g yarn
 
-# Copiar dependencias de Python
-COPY ./production.txt ./
-RUN pip install -r production.txt
+# Copiar dependencias de Python desde la raíz del contexto
+COPY ./production.txt /app/
+COPY ./requirements.txt /app/
 
-# Copiar el resto del proyecto
-COPY ./ ./
+# Instalar dependencias de Python
+RUN pip install --no-cache-dir -r production.txt
+
+# Copiar el resto del proyecto desde la raíz del contexto
+COPY . /app/
 
 # Instalar dependencias de Node.js y compilar Tailwind
 RUN yarn install --frozen-lockfile
