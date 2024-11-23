@@ -20,21 +20,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Actualizar pip e instalar Gunicorn
+# Actualizar pip
 RUN pip install --upgrade pip
 
 # Instalar Yarn
 RUN npm install -g yarn
 
 # Copiar dependencias de Python
-COPY production.txt .
-RUN pip install -r production.txt
+COPY ./production.txt /app/
+RUN pip install --no-cache-dir -r production.txt
 
 # Copiar el resto del proyecto
-COPY . .
+COPY . /app/
 
 # Instalar dependencias de Node.js y compilar Tailwind
-RUN yarn install
+RUN yarn install --frozen-lockfile
 RUN yarn run build
 
 # Recoger archivos estáticos
