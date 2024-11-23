@@ -1,5 +1,5 @@
-# Base de Python
-FROM python:3.11-slim
+# Base de Python para la aplicación
+FROM python:3.11-slim AS python-base
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -9,36 +9,51 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     BUILD_ENV=production
 
-# Instalar dependencias del sistema
+# Instalar dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     build-essential \
     libpq-dev \
     curl \
-    nodejs \
-    npm \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Actualizar pip
 RUN pip install --upgrade pip
 
-# Instalar Yarn
-RUN npm install -g yarn
-
-# Copiar dependencias de Python desde la raíz del contexto
-COPY ./production.txt /app/
-COPY ./requirements.txt /app/
+# Copiar dependencias de Python
+COPY ./requirements.txt ./production.txt /app/
 
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r production.txt
 
-# Copiar el resto del proyecto desde la raíz del contexto
-COPY . /app/
+# ---- Etapa para Tailwind y Node.js ---- #
+FROM node:16-alpine AS node-build
 
-# Instalar dependencias de Node.js y compilar Tailwind
+# Instalar Yarn
+RUN npm install -g yarn
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos necesarios para Tailwind
+COPY ./tailwind.config.js ./postcss.config.js ./package.json ./yarn.lock ./
+
+# Instalar dependencias de Node.js
 RUN yarn install --frozen-lockfile
+
+# Copiar estilos y compilar Tailwind
+COPY ./static ./static
 RUN yarn run build
+
+# ---- Finalizar imagen ---- #
+FROM python-base
+
+# Copiar archivos compilados de Node.js (Tailwind)
+COPY --from=node-build /app/static /app/static
+
+# Copiar el resto del proyecto
+COPY . /app/
 
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
@@ -47,4 +62,6 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Comando de inicio
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["sh", "/compose/production/django/entrypoint.sh"]
+
+

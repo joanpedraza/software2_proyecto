@@ -1,1 +1,2 @@
 DATABASE_URL=postgres://postgres:postgres@postgres:5432/invencloud
+DJANGO_SETTINGS_MODULE=config.settings.local
