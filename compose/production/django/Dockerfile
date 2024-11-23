@@ -25,7 +25,7 @@ RUN apk update && apk add --no-cache \
 
 # Instalar dependencias de Python desde requirements.txt
 COPY ./production.txt ./
-RUN pip install -r production.txt
+RUN pip install -r production.txt && pip install gunicorn
 
 # Copiar el código de la aplicación al contenedor
 COPY ./ ./
