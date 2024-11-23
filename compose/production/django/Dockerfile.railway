@@ -39,8 +39,8 @@ COPY ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js 
 # Copiar los archivos de los estilos (asegúrate de que la carpeta "static_src" contenga styles.css u otros archivos relevantes)
 COPY ./theme/static_src/src/styles.css ./theme/static_src/
 
-# Instalar dependencias de Node.js
-RUN yarn install --frozen-lockfile
+# Instalar dependencias de Node.js --frozen-lockfile
+RUN yarn install 
 
 # Copiar estilos y compilar Tailwind
 COPY ./static ./static
