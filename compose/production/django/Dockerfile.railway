@@ -30,17 +30,17 @@ RUN pip install --no-cache-dir -r production.txt
 # ---- Etapa para Tailwind y Node.js ---- #
 FROM node:18-alpine AS node-build
 
-# Instalar Yarn
-RUN npm install -g yarn --force
-
 # Establecer directorio de trabajo
 WORKDIR /app
 
 # Copiar archivos necesarios para Tailwind
 COPY ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./theme/static_src/package.json ./yarn.lock ./
 
-# Instalar dependencias de Node.js --frozen-lockfiles
-RUN yarn install 
+# Copiar los archivos de los estilos (asegúrate de que la carpeta "static_src" contenga styles.css u otros archivos relevantes)
+COPY ./theme/static_src/styles.css ./theme/static_src/
+
+# Instalar dependencias de Node.js
+RUN yarn install --frozen-lockfile
 
 # Copiar estilos y compilar Tailwind
 COPY ./static ./static
@@ -63,5 +63,3 @@ EXPOSE 8000
 
 # Comando de inicio
 CMD ["sh", "/compose/production/django/entrypoint.sh"]
-
-
