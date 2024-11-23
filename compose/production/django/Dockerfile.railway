@@ -34,7 +34,7 @@ FROM node:18-alpine AS node-build
 WORKDIR /app
 
 # Copiar archivos necesarios para Tailwind
-COPY ./theme/static_src/package.json ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./theme/static_src/yarn.lock ./app/theme/static_src/
+COPY ./theme/static_src/package.json ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./yarn.lock ./app/theme/static_src/
 
 # Copiar los archivos de los estilos (asegúrate de que la carpeta "static_src" contenga styles.css u otros archivos relevantes)
 COPY ./theme/static_src/src/styles.css ./app/theme/static_src/src/
