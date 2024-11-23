@@ -1,4 +1,4 @@
-# Etapa base de Python
+# Base de Python para la aplicación
 FROM python:3.11-slim AS python-base
 
 # Establecer directorio de trabajo
@@ -27,29 +27,33 @@ COPY ./requirements.txt ./production.txt /app/
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r production.txt
 
-# Etapa para Tailwind y Node.js
+# ---- Etapa para Tailwind y Node.js ---- #
 FROM node:18-alpine AS node-build
 
 # Establecer directorio de trabajo
 WORKDIR /app
 
 # Copiar archivos necesarios para Tailwind
-COPY ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./theme/static_src/package.json ./yarn.lock ./theme/static_src/
+COPY ./theme/static_src/package.json ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./theme/static_src/yarn.lock ./app/theme/static_src/
 
-# Copiar los archivos de estilos
-COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
+# Copiar los archivos de los estilos (asegúrate de que la carpeta "static_src" contenga styles.css u otros archivos relevantes)
+COPY ./theme/static_src/src/styles.css ./app/theme/static_src/src/
 
-# Instalar dependencias de Node.js
+# Instalar dependencias de Node.js --frozen-lockfile
 RUN yarn install --frozen-lockfile
 
 # Ejecutar la construcción de Tailwind
+WORKDIR /app/theme/static_src  # Cambiar al directorio correcto antes de ejecutar build
 RUN yarn run build
 
-# Etapa final con Python
+# Copiar los archivos de salida de la compilación (si es necesario)
+COPY ./static ./static
+
+# ---- Finalizar imagen ---- #
 FROM python-base
 
 # Copiar archivos compilados de Node.js (Tailwind)
-COPY --from=node-build /app/theme/static_src/dist /app/static
+COPY --from=node-build /app/static /app/static
 
 # Copiar el resto del proyecto
 COPY . /app/
@@ -57,8 +61,9 @@ COPY . /app/
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
 
-# Exponer el puerto
+# Configuración del puerto
 EXPOSE 8000
 
 # Comando de inicio
 CMD ["sh", "/compose/production/django/entrypoint.sh"]
+
