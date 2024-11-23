@@ -27,8 +27,8 @@ RUN pip install --upgrade pip
 RUN npm install -g yarn
 
 # Copiar dependencias de Python
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY production.txt .
+RUN pip install -r production.txt
 
 # Copiar el resto del proyecto
 COPY . .
