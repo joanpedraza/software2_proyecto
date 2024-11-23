@@ -43,7 +43,7 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 RUN yarn install --frozen-lockfile
 
 # Ejecutar la construcción de Tailwind
-WORKDIR /theme/static_src 
+WORKDIR /
 RUN yarn run build
 
 # Copiar los archivos de salida de la compilación (si es necesario)
