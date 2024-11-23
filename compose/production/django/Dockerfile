@@ -24,8 +24,8 @@ RUN apk update && apk add --no-cache \
     pip install --upgrade pip
 
 # Instalar dependencias de Python desde requirements.txt
-COPY ./requirements.txt ./
-RUN pip install -r requirements.txt
+COPY ./production.txt ./
+RUN pip install -r production.txt
 
 # Copiar el código de la aplicación al contenedor
 COPY ./ ./
