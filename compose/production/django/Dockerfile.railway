@@ -40,12 +40,16 @@ COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
 COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Instalar dependencias de Node.js
+WORKDIR /app/theme/static_src
 RUN yarn install --frozen-lockfile
 
 # Ejecutar la construcción de Tailwind
 RUN yarn run build
 
 # ---- Etapa para SCSS ---- #
+# Cambiar de nuevo al directorio de trabajo principal
+WORKDIR /app
+
 # Copia el package.json y yarn.lock del frontend
 COPY ./package.json ./yarn.lock ./
 
