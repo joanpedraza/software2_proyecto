@@ -1,0 +1,6 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./compose/production/Dockerfile.railway"
+
+[start]
+cmd = "sh ./compose/production/django/entrypoint.sh"
