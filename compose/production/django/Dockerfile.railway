@@ -34,16 +34,16 @@ FROM node:18-alpine AS node-build
 WORKDIR /app
 
 # Copiar archivos necesarios para Tailwind
-COPY ./theme/static_src/package.json ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./yarn.lock ./app/theme/static_src/
+COPY ./theme/static_src/package.json ./theme/static_src/tailwind.config.js ./theme/static_src/postcss.config.js ./yarn.lock ./theme/static_src/
 
 # Copiar los archivos de los estilos (asegúrate de que la carpeta "static_src" contenga styles.css u otros archivos relevantes)
-COPY ./theme/static_src/src/styles.css ./app/theme/static_src/src/
+COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Instalar dependencias de Node.js --frozen-lockfile
 RUN yarn install --frozen-lockfile
 
 # Ejecutar la construcción de Tailwind
-WORKDIR /app/theme/static_src  # Cambiar al directorio correcto antes de ejecutar build
+WORKDIR /theme/static_src  # Cambiar al directorio correcto antes de ejecutar build
 RUN yarn run build
 
 # Copiar los archivos de salida de la compilación (si es necesario)
