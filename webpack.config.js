@@ -1,8 +1,10 @@
 const path = require('path');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
-  mode: 'development',
-  entry: './frontend/src/index.js',
+  mode: isProduction ? 'production' : 'development', // Modo dinámico
+  entry: './frontend/src/index.js', // Asegúrate de que este archivo exista
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'static/frontend'),
@@ -29,5 +31,5 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.scss'],
   },
-  devtool: 'source-map',
+  devtool: isProduction ? false : 'source-map',
 };
