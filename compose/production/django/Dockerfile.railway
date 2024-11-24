@@ -28,7 +28,16 @@ COPY ./requirements.txt ./production.txt /app/
 RUN pip install --no-cache-dir -r production.txt
 
 # ---- Etapa para Tailwind y Node.js ---- #
-FROM node:20.18.1-slim AS node-build
+# Instalar Node.js 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get update && apt-get install -y nodejs && \
+    apt-get clean
+
+# Instalar npm y actualizar a la última versión
+RUN npm install -g npm@latest
+
+# Instalar Yarn globalmente
+RUN npm install -g yarn
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -77,9 +86,9 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
-RUN apt-get update && \
-    apt-get install -y npm && \
-    npm install -g npm@latest
+# RUN apt-get update && \
+#     apt-get install -y npm && \
+#     npm install -g npm@latest
 
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
