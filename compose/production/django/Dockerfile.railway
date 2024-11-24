@@ -1,5 +1,5 @@
 # Base de Python para la aplicación
-FROM python:3.11-alpine AS python-base
+FROM python:3.11-slim AS python-base
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -10,15 +10,14 @@ ENV PYTHONUNBUFFERED=1 \
     BUILD_ENV=production
 
 # Instalar dependencias del sistema necesarias
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    libc-dev \
+    build-essential \
     libpq-dev \
     curl \
-    bash \
-    nodejs \
-    npm \
-    && rm -rf /var/cache/apk/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Actualizar pip
 RUN pip install --upgrade pip
 
@@ -29,13 +28,7 @@ COPY ./requirements.txt ./production.txt /app/
 RUN pip install --no-cache-dir -r production.txt
 
 # ---- Etapa para Tailwind y Node.js ---- #
-# # Instalar Node.js 20
-# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-#     apt-get update && apt-get install -y nodejs && \
-#     apt-get clean
-
-RUN npm install -g npm@latest
-RUN npm install -g yarn
+FROM node:20.18.1-alpine AS node-build
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -49,10 +42,13 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
 
-# Instalar dependencias de Node.js de tailwind
+# Instalar dependencias de Node.js
 WORKDIR /app/theme/static_src
-RUN npm install --frozen-lockfile
-RUN npm run build
+RUN yarn install --frozen-lockfile
+
+# Ejecutar la construcción de Tailwind
+RUN yarn run build
+
 # Cambiar de nuevo al directorio de trabajo principal
 WORKDIR /app/frontend
 
@@ -71,31 +67,39 @@ WORKDIR /app
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
 
-# RUN apt-get update && \
-#     apt-get install -y npm && \
-#     npm install -g npm@latest
-
-# Asegurar que Django detecte npm
-
-#ENV NPM_BIN_PATH="/usr/local/bin/yarn"
-
-# Ejecutar la construcción de Tailwind
-
-
 # ---- Finalizar imagen ---- #
 FROM python-base
 
 # Copiar archivos compilados de Node.js (Tailwind y SCSS)
-COPY --from=python-base /app/theme/static /app/theme/static
-COPY --from=python-base /app/static /app/static
-
-ENV PATH="/usr/bin:$PATH"
-ENV NPM_BIN_PATH="/usr/bin/npm"
-
-RUN python manage.py tailwind build
+COPY --from=node-build /app/theme/static /app/theme/static
+COPY --from=node-build /app/static /app/static
 
 # Copiar el resto del proyecto
 COPY . /app/
+
+RUN apt-get update && \
+    apt-get install -y npm && \
+    npm install -g npm@latest
+
+WORKDIR /app/theme/static_src
+RUN npm install --frozen-lockfile
+RUN npm run build
+
+WORKDIR /app
+
+# Verificar la instalación de npm y node
+RUN npm --version
+RUN node --version
+RUN which npm
+RUN which node
+
+# Asegurar que Django detecte npm
+ENV PATH="/usr/bin:$PATH"
+ENV NPM_BIN_PATH="/usr/bin/npm"
+#ENV NPM_BIN_PATH="/usr/local/bin/yarn"
+
+# Ejecutar la construcción de Tailwind
+RUN python manage.py tailwind build
 
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
