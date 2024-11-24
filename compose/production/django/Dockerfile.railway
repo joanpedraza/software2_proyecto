@@ -71,6 +71,7 @@ COPY ./static ./static
 FROM python-base
 
 # Copiar archivos compilados de Node.js (Tailwind y SCSS)
+COPY --from=node-build /app/theme/static /app/theme/static
 COPY --from=node-build /app/static /app/static
 
 # Copiar el resto del proyecto
