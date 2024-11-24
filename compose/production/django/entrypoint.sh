@@ -1,8 +1,4 @@
-#!/bin/bash
-
-set -o errexit  # Salir si un comando falla
-set -o pipefail # Hacer que un pipe falle si un comando en el pipe falla
-set -o nounset  # Salir si se intenta usar una variable no definida
+#!/bin/sh
 
 # Limpiar archivos estáticos antiguos (opcional)
 # echo "Limpiando archivos estáticos antiguos..."
