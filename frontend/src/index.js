@@ -1,5 +1,5 @@
 // frontend/src/index.js
-import './styles/style.scss'; // Asegúrate de tener un archivo SCSS
+//import './styles/style.scss'; // Asegúrate de tener un archivo SCSS
 
 const btn = document.getElementById('hamburger-menu-btn')
 const mobileMenu= document.getElementById('mobile-menu')
