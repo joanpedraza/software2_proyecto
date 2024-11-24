@@ -76,8 +76,7 @@ COPY --from=node-build /app/static /app/static
 
 # Copiar el resto del proyecto
 COPY . /app/
-# Añadir un comando temporal para verificar npm
-RUN echo "Verificando ruta de npm:" && which npm && echo "PATH actual: $PATH"
+
 
 RUN python manage.py tailwind build
 # Recoger archivos estáticos
