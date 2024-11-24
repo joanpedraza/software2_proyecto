@@ -52,7 +52,7 @@ RUN yarn run build
 # Cambiar de nuevo al directorio de trabajo principal
 WORKDIR /app/frontend
 
-# Copia el package.json y yarn.lock del frontend
+# Copiar el package.json y yarn.lock del frontend
 COPY ./package.json ./yarn.lock ./
 
 # Instalar dependencias de Node.js para SCSS
@@ -77,17 +77,24 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
+# Instalar npm
 RUN apt-get update && apt-get install -y npm
 
+# Verificar la instalación de npm y node
 RUN npm --version
 RUN node --version
 RUN which npm
 RUN which node
 
+ENV PATH="/usr/bin:$PATH"
+
+# Ejecutar la construcción de Tailwind
 RUN python manage.py tailwind build
+
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
 
+# Copiar el entrypoint.sh
 COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
 
 # Configuración del puerto
