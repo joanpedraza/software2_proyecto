@@ -102,7 +102,6 @@ RUN npm install --frozen-lockfile
 RUN npm run build
 
 
-
 # Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
 ENV NPM_BIN_PATH="/usr/bin/npm"
