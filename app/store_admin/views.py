@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from app.store_admin.models import Product, Provider
 from app.customers.models import Order,Customer
+import requests
+from django.conf import settings
+from datetime import datetime
 
 def admin_required(function=None, login_url='/accounts/login/'):
     return user_passes_test(lambda u: u.is_superuser, login_url=login_url)(function)
@@ -38,8 +41,7 @@ def inventory(request):
 
 @admin_required
 def order_history(request):
-    orders = Order.objects.prefetch_related('productorder_set__product','customer','supervisor').all()
-    customers = Customer.objects.prefetch_related('user').all()
+    api_url = f"{settings.API_BASE_URL}/customers/api/orders/"
 
     selected_customer = request.GET.get('customer')
     selected_start_date = request.GET.get('start_date')
@@ -47,28 +49,33 @@ def order_history(request):
     selected_min_price = request.GET.get('min_price')
     selected_max_price = request.GET.get('max_price')
 
-    if selected_customer:
-        orders = orders.filter(customer_id=selected_customer)
-    
-    if selected_start_date:
-        orders = orders.filter(date__gte=selected_start_date)
-    
-    if selected_end_date:
-        orders = orders.filter(date__lte=selected_end_date)
-    
-    if selected_min_price:
-        orders = orders.filter(total_price__gte=selected_min_price)
-    
-    if selected_max_price:
-        orders = orders.filter(total_price__lte=selected_max_price)
-        
+    params = {
+        'customer': selected_customer,
+        'start_date': selected_start_date,
+        'end_date': selected_end_date,
+        'min_price': selected_min_price,
+        'max_price': selected_max_price,
+    }
 
-    return render(request, 'store_admin/orders.html', {'orders': orders, 'customers': customers,
-         'selected_customer': selected_customer,
+    try:
+        response = requests.get(api_url, params=params)
+        response.raise_for_status()  
+        orders = response.json()  
+    except requests.RequestException as e:
+        orders = []  
+        print(f"Error al conectar con la API: {e}")
+
+    customers = Customer.objects.prefetch_related('user').all()
+
+    return render(request, 'store_admin/orders.html', {
+        'orders': orders,
+        'customers': customers,
+        'selected_customer': selected_customer,
         'selected_start_date': selected_start_date,
         'selected_end_date': selected_end_date,
         'selected_min_price': selected_min_price,
-        'selected_max_price': selected_max_price})
+        'selected_max_price': selected_max_price,
+    })
 
 def exitAdmin(request):
     logout(request)
