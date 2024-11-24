@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     BUILD_ENV=production
 
-# Instalar dependencias del sistema necesarias usando apk
+# Instalar dependencias del sistema necesarias
 RUN apk add --no-cache \
     gcc \
     libc-dev \
@@ -19,7 +19,6 @@ RUN apk add --no-cache \
     nodejs \
     npm \
     && rm -rf /var/cache/apk/*
-
 # Actualizar pip
 RUN pip install --upgrade pip
 
@@ -30,6 +29,11 @@ COPY ./requirements.txt ./production.txt /app/
 RUN pip install --no-cache-dir -r production.txt
 
 # ---- Etapa para Tailwind y Node.js ---- #
+# # Instalar Node.js 20
+# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+#     apt-get update && apt-get install -y nodejs && \
+#     apt-get clean
+
 RUN npm install -g npm@latest
 RUN npm install -g yarn
 
@@ -45,16 +49,15 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
 
-# Instalar dependencias de Node.js para Tailwind
+# Instalar dependencias de Node.js de tailwind
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
 RUN npm run build
-
 # Cambiar de nuevo al directorio de trabajo principal
 WORKDIR /app/frontend
 
 # Copiar el package.json y yarn.lock del frontend
-COPY ./package.json ./yarn.lock ./  
+COPY ./package.json ./yarn.lock ./
 
 # Instalar dependencias de Node.js para SCSS
 RUN yarn install --frozen-lockfile
@@ -64,9 +67,13 @@ RUN yarn run build
 
 WORKDIR /app
 
+
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
 
+# RUN apt-get update && \
+#     apt-get install -y npm && \
+#     npm install -g npm@latest
 
 # Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
@@ -75,6 +82,16 @@ ENV NPM_BIN_PATH="/usr/bin/npm"
 
 # Ejecutar la construcción de Tailwind
 RUN python manage.py tailwind build
+
+# ---- Finalizar imagen ---- #
+FROM python-base
+
+# Copiar archivos compilados de Node.js (Tailwind y SCSS)
+COPY --from=python-base /app/theme/static /app/theme/static
+COPY --from=python-base /app/static /app/static
+
+# Copiar el resto del proyecto
+COPY . /app/
 
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
