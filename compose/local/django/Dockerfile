@@ -7,7 +7,7 @@ WORKDIR /app
 # Variables de entorno
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    BUILD_ENV=local
+    BUILD_ENV=production
 
 # Instalar dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -77,8 +77,15 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
-# Instalar npm
-RUN apt-get update && apt-get install -y npm
+# Todo: Instalar Node.js y npm globalmente
+ARG NODE_MAJOR=18
+
+RUN mkdir -p /etc/apt/keyrings && \
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+  apt-get update && apt-get install -y nodejs && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
 # Verificar la instalación de npm y node
 RUN npm --version
@@ -86,9 +93,20 @@ RUN node --version
 RUN which npm
 RUN which node
 
+
+# Instalar dependencias de Node.js usando npm
+WORKDIR /app/theme/static_src
+RUN npm install --frozen-lockfile
+
+# Ejecutar la construcción de Tailwind usando npm
+RUN npm run build
+
+
+
 # Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
 ENV NPM_BIN_PATH="/usr/bin/npm"
+#ENV NPM_BIN_PATH="/usr/local/bin/yarn"
 
 # Ejecutar la construcción de Tailwind
 RUN python manage.py tailwind build
@@ -103,4 +121,4 @@ COPY ./compose/production/django/entrypoint.sh /compose/production/django/entryp
 EXPOSE 8000
 
 # Comando de inicio
-CMD ["sh", "/compose/local/django/entrypoint.sh"]
+CMD ["sh", "/compose/production/django/entrypoint.sh"]
