@@ -1,5 +1,5 @@
 # Base de Python para la aplicación
-FROM python:3.11-slim AS python-base
+FROM python:3.11-alpine AS python-base
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -10,13 +10,12 @@ ENV PYTHONUNBUFFERED=1 \
     BUILD_ENV=production
 
 # Instalar dependencias del sistema necesarias
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apk update && apk add --no-cache \
     gcc \
-    build-essential \
-    libpq-dev \
-    curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    musl-dev \
+    libffi-dev \
+    postgresql-dev \
+    curl
 
 # Actualizar pip
 RUN pip install --upgrade pip
@@ -63,7 +62,6 @@ RUN yarn run build
 
 WORKDIR /app
 
-
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
 
@@ -77,9 +75,7 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
-RUN apt-get update && \
-    apt-get install -y npm && \
-    npm install -g npm@latest
+RUN apk update && apk add --no-cache npm && npm install -g npm@latest
 
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
@@ -96,7 +92,6 @@ RUN which node
 # Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
 ENV NPM_BIN_PATH="/usr/bin/npm"
-#ENV NPM_BIN_PATH="/usr/local/bin/yarn"
 
 # Ejecutar la construcción de Tailwind
 RUN python manage.py tailwind build
