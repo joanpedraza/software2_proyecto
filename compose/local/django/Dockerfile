@@ -1,40 +1,106 @@
-FROM python:3.11.10-alpine3.20
+# Base de Python para la aplicación
+FROM python:3.11-slim AS python-base
+
+# Establecer directorio de trabajo
+WORKDIR /app
 
 # Variables de entorno
-ENV PYTHONUNBUFFERED=1
-ARG APP_HOME=/app
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV BUILD_ENV ${BUILD_ENVIRONMENT}
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    BUILD_ENV=local
 
-WORKDIR ${APP_HOME}
-
-# Actualizar paquetes del sistema e instalar dependencias necesarias
-RUN apk update && apk add --no-cache \
+# Instalar dependencias del sistema necesarias
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    musl-dev \
-    postgresql-dev \
-    python3-dev \
-    libffi-dev \
+    build-essential \
+    libpq-dev \
     curl \
-    nodejs \
-    npm \
-    git \
-    g++ \
-    make && \
-    pip install --upgrade pip
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias de Python desde requirements.txt
-COPY ./requirements.txt ./
-RUN pip install -r requirements.txt
+# Actualizar pip
+RUN pip install --upgrade pip
 
-# Copiar el código de la aplicación al contenedor
-COPY ./ ./
+# Copiar dependencias de Python
+COPY ./requirements.txt ./production.txt /app/
 
-# Configurar el comando predeterminado
-CMD ["sh", "entrypoint.sh"]
+# Instalar dependencias de Python
+RUN pip install --no-cache-dir -r production.txt
 
-# Descomenta para ejecutar directamente Django
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# ---- Etapa para Tailwind y Node.js ---- #
+FROM node:20.18.1-slim AS node-build
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos necesarios para Tailwind
+COPY ./theme/static_src/package.json ./theme/static_src/
+COPY ./theme/static_src/postcss.config.js ./theme/static_src/
+COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
+COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
+
+# Copiar el directorio frontend
+COPY ./frontend ./frontend/
+
+# Instalar dependencias de Node.js
+WORKDIR /app/theme/static_src
+RUN yarn install --frozen-lockfile
+
+# Ejecutar la construcción de Tailwind
+RUN yarn run build
+
+# Cambiar de nuevo al directorio de trabajo principal
+WORKDIR /app/frontend
+
+# Copiar el package.json y yarn.lock del frontend
+COPY ./package.json ./yarn.lock ./
+
+# Instalar dependencias de Node.js para SCSS
+RUN yarn install --frozen-lockfile
+
+# Ejecutar la construcción de SCSS
+RUN yarn run build
+
+WORKDIR /app
 
 
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Copiar los archivos de salida de la compilación (si es necesario)
+COPY ./static ./static
+
+# ---- Finalizar imagen ---- #
+FROM python-base
+
+# Copiar archivos compilados de Node.js (Tailwind y SCSS)
+COPY --from=node-build /app/theme/static /app/theme/static
+COPY --from=node-build /app/static /app/static
+
+# Copiar el resto del proyecto
+COPY . /app/
+
+# Instalar npm
+RUN apt-get update && apt-get install -y npm
+
+# Verificar la instalación de npm y node
+RUN npm --version
+RUN node --version
+RUN which npm
+RUN which node
+
+# Asegurar que Django detecte npm
+ENV PATH="/usr/bin:$PATH"
+ENV NPM_BIN_PATH="/usr/bin/npm"
+
+# Ejecutar la construcción de Tailwind
+RUN python manage.py tailwind build
+
+# Recoger archivos estáticos
+RUN python manage.py collectstatic --noinput
+
+# Copiar el entrypoint.sh
+COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
+
+# Configuración del puerto
+EXPOSE 8000
+
+# Comando de inicio
+CMD ["sh", "/compose/local/django/entrypoint.sh"]
