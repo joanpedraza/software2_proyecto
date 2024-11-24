@@ -77,6 +77,10 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
+RUN npm --version
+RUN node --version
+RUN which npm
+RUN which node
 
 RUN python manage.py tailwind build
 # Recoger archivos estáticos
