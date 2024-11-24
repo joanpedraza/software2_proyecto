@@ -15,3 +15,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 X_FRAME_OPTIONS = "DENY"
+
+STATIC_URL = '/static/'
+STATIC_ROOT = '/app/staticfiles'
+
+STATICFILES_DIRS = [
+    '/app/static',
+]
