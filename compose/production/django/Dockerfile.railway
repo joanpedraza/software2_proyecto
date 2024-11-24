@@ -76,12 +76,11 @@ COPY ./static ./static
 #     npm install -g npm@latest
 
 # Asegurar que Django detecte npm
-ENV PATH="/usr/bin:$PATH"
-ENV NPM_BIN_PATH="/usr/bin/npm"
+
 #ENV NPM_BIN_PATH="/usr/local/bin/yarn"
 
 # Ejecutar la construcción de Tailwind
-RUN python manage.py tailwind build
+
 
 # ---- Finalizar imagen ---- #
 FROM python-base
@@ -89,6 +88,11 @@ FROM python-base
 # Copiar archivos compilados de Node.js (Tailwind y SCSS)
 COPY --from=python-base /app/theme/static /app/theme/static
 COPY --from=python-base /app/static /app/static
+
+ENV PATH="/usr/bin:$PATH"
+ENV NPM_BIN_PATH="/usr/bin/npm"
+
+RUN python manage.py tailwind build
 
 # Copiar el resto del proyecto
 COPY . /app/
