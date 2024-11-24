@@ -129,6 +129,7 @@ class OrderAPIView(APIView):
     def get(self, request):
         #Filtrado
         customer_name = request.GET.get('customer') 
+        store = request.GET.get('store')
         start_date = request.GET.get('start_date')
         end_date = request.GET.get('end_date')
         min_price = request.GET.get('min_price')
@@ -172,4 +173,11 @@ class OrderAPIView(APIView):
                 pass  
 
         serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serialized_data = serializer.data
+
+        if store:
+            serialized_data = [
+                order for order in serialized_data if store.lower() in order['store'].lower()
+            ]
+
+        return Response(serialized_data, status=status.HTTP_200_OK)

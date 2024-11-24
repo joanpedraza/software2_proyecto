@@ -44,6 +44,7 @@ def order_history(request):
     api_url = f"{settings.API_BASE_URL}/customers/api/orders/"
 
     selected_customer = request.GET.get('customer')
+    selected_store = request.GET.get('sucursal')    
     selected_start_date = request.GET.get('start_date')
     selected_end_date = request.GET.get('end_date')
     selected_min_price = request.GET.get('min_price')
@@ -51,6 +52,7 @@ def order_history(request):
 
     params = {
         'customer': selected_customer,
+        'store': selected_store,        
         'start_date': selected_start_date,
         'end_date': selected_end_date,
         'min_price': selected_min_price,
@@ -70,6 +72,7 @@ def order_history(request):
     return render(request, 'store_admin/orders.html', {
         'orders': orders,
         'customers': customers,
+        'selected_store': selected_store,
         'selected_customer': selected_customer,
         'selected_start_date': selected_start_date,
         'selected_end_date': selected_end_date,
