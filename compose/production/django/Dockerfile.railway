@@ -86,7 +86,9 @@ RUN node --version
 RUN which npm
 RUN which node
 
+# Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
+ENV NPM_BIN_PATH="/usr/bin/npm"
 
 # Ejecutar la construcción de Tailwind
 RUN python manage.py tailwind build
