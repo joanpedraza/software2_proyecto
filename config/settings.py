@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
-    
+    'rest_framework'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

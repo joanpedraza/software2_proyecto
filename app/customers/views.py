@@ -7,6 +7,12 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import viewsets
+from .serializer import OrderSerializer,ProductOrderSerializer
+
 class ProductListView(UserPassesTestMixin, ListView):
     model = Product
     template_name = 'customers/product_list.html'
@@ -116,3 +122,11 @@ class OrderListView(UserPassesTestMixin, ListView):
     def handle_no_permission(self):
         from django.shortcuts import redirect
         return redirect('login')
+    
+
+# Serializers
+class OrderAPIView(APIView):
+    def get(self, request):
+        orders = Order.objects.prefetch_related('productorder_set__product', 'customer__user').all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
