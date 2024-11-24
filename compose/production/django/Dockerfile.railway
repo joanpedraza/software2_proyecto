@@ -85,6 +85,7 @@ WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
 RUN npm run build
 
+WORKDIR /app
 
 # Verificar la instalación de npm y node
 RUN npm --version
