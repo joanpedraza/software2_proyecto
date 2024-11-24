@@ -77,6 +77,7 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
+RUN echo "La ruta de npm es: $(which npm)"
 RUN python manage.py tailwind build
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
