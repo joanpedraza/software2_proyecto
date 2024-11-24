@@ -79,6 +79,8 @@ COPY . /app/
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
 
+COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
+
 # Configuración del puerto
 EXPOSE 8000
 
