@@ -40,15 +40,16 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
-WORKDIR /app/frontend
+#WORKDIR /app/frontend
 COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile
-RUN yarn run build
+#RUN yarn run build
+RUN yarn build
 
-WORKDIR /app
-COPY ./package.json ./yarn.lock ./
-RUN yarn install --frozen-lockfile
-RUN yarn run build
+# WORKDIR /app
+# COPY ./package.json ./yarn.lock ./
+# RUN yarn install --frozen-lockfile
+# RUN yarn run build
 
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
@@ -70,12 +71,6 @@ RUN npm install --frozen-lockfile
 RUN npm run build
 
 WORKDIR /app
-
-# Verificar la instalación de npm y node
-RUN npm --version
-RUN node --version
-RUN which npm
-RUN which node
 
 # Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
