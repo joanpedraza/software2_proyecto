@@ -46,7 +46,7 @@ COPY ./static ./static
 COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile
 #RUN yarn run build
-RUN yarn build
+RUN yarn run build
 
 # WORKDIR /app
 # COPY ./package.json ./yarn.lock ./
