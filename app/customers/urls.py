@@ -1,5 +1,6 @@
-from django.urls import path
-from .views import OrderListView, ProductListView, add_to_cart, create_order, remove_from_cart, update_cart_item, view_cart
+from django.urls import path, include
+from .views import OrderListView, ProductListView, OrderAPIView, add_to_cart, create_order, remove_from_cart, update_cart_item, view_cart
+from rest_framework import routers
 
 
 urlpatterns = [
@@ -10,4 +11,5 @@ urlpatterns = [
     path('update_cart_item/<int:product_id>/', update_cart_item, name='update_cart_item'),
     path('create_order/', create_order, name='create_order'),
     path('orders/', OrderListView.as_view(), name='order_list'),
+    path('api/orders/', OrderAPIView.as_view(), name='order-list')
 ]
