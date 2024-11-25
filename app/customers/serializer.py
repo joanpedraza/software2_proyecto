@@ -12,7 +12,7 @@ class OrderSerializer(serializers.ModelSerializer):
     products = ProductOrderSerializer(source='productorder_set', many=True, read_only=True)
     customer_name = serializers.CharField(source='customer.user.get_full_name', read_only=True)
     status = serializers.CharField(default='Registrado')
-    store = serializers.CharField(default='3A-STORE')
+    store = serializers.CharField(default='3A')
 
     class Meta:
         model = Order
