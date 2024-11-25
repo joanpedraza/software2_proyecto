@@ -58,11 +58,11 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
-RUN apk add --no-cache nodejs-current npm && \
+RUN apk add --no-cache bash nodejs-current npm && \
     npm install -g n && \
-    n 22.0.0 && \
+    bash -c "n 22.0.0" && \
     apk del nodejs-current
-    
+
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
 RUN npm run build
