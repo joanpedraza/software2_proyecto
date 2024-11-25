@@ -15,7 +15,16 @@ RUN apk update && apk add --no-cache \
     musl-dev \
     libffi-dev \
     postgresql-dev \
-    curl
+    curl \
+    bash \
+    nodejs-current \
+    npm \
+    yarn
+
+# Actualizar Node.js a la versión deseada
+RUN npm install -g n && \
+    bash -c "n 22.0.0" && \
+    apk del nodejs-current
 
 # Actualizar pip
 RUN pip install --upgrade pip
@@ -27,16 +36,16 @@ COPY ./requirements.txt ./production.txt /app/
 RUN pip install --no-cache-dir -r production.txt
 
 # ---- Etapa para Tailwind y Node.js ---- #
-FROM node:20.18.1-alpine AS node-build
+# FROM node:20.18.1-alpine AS node-build
 
-# Establecer directorio de trabajo
-WORKDIR /app
+# # Establecer directorio de trabajo
+# WORKDIR /app
 
-# Copiar archivos necesarios para Tailwind
-COPY ./theme/static_src/package.json ./theme/static_src/
-COPY ./theme/static_src/postcss.config.js ./theme/static_src/
-COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
-COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
+# # Copiar archivos necesarios para Tailwind
+# COPY ./theme/static_src/package.json ./theme/static_src/
+# COPY ./theme/static_src/postcss.config.js ./theme/static_src/
+# COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
+# COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
@@ -49,7 +58,7 @@ WORKDIR /app
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
 # ---- Finalizar imagen ---- #
-FROM python-base
+# FROM python-base
 
 # Copiar archivos compilados de Node.js (Tailwind y SCSS)
 #COPY --from=node-build /app/theme/static /app/theme/static
@@ -58,12 +67,12 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
-RUN apk add --no-cache bash nodejs-current npm && \
-    npm install -g n && \
-    bash -c "n 22.0.0" && \
-    apk del nodejs-current
+# RUN apk add --no-cache bash nodejs-current npm && \
+#     npm install -g n && \
+#     bash -c "n 22.0.0" && \
+#     apk del nodejs-current
     
-RUN apk update && apk add --no-cache npm && npm install -g npm@latest && apk add --no-cache yarn
+# RUN apk update && apk add --no-cache npm && npm install -g npm@latest && apk add --no-cache yarn
 
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
