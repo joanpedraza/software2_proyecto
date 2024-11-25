@@ -16,3 +16,5 @@ INTERNAL_IPS = [
 
 # Ruta para npm (específica en desarrollo)
 NPM_BIN_PATH = env("NPM_BIN_PATH", default="C:/Program Files/nodejs/npm.cmd")
+
+API_BASE_URL = env("API_BASE_URL", default="http://localhost:8000")
