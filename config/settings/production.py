@@ -25,6 +25,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=['software2proyecto-production.up.railway.app'])
 CSRF_TRUSTED_ORIGINS = [
     'https://software2proyecto-production.up.railway.app',
+    'https://invencloud.up.railway.app',
 ]
 
 # Cabecera para proxies como Railway
