@@ -10,21 +10,21 @@ ENV PYTHONUNBUFFERED=1 \
     BUILD_ENV=production
 
 # Instalar dependencias del sistema necesarias
+# Instalar dependencias del sistema necesarias y configurar Node.js desde NodeSource
 RUN apk update && apk add --no-cache \
     gcc \
     musl-dev \
     libffi-dev \
     postgresql-dev \
     curl \
-    bash \
-    nodejs-current \
-    npm \
-    yarn
+    bash && \
+    # Agregar fuente de NodeSource
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apk add --no-cache nodejs npm
 
-# Actualizar Node.js a la versión deseada
-RUN npm install -g n && \
-    bash -c "n 22.0.0" && \
-    apk del nodejs-current
+# Verificar la versión de Node.js instalada
+RUN node --version && npm --version
+
 
 # Actualizar pip
 RUN pip install --upgrade pip
@@ -72,7 +72,7 @@ COPY . /app/
 #     bash -c "n 22.0.0" && \
 #     apk del nodejs-current
     
-# RUN apk update && apk add --no-cache npm && npm install -g npm@latest && apk add --no-cache yarn
+RUN apk update && apk add --no-cache npm && npm install -g npm@latest && apk add --no-cache yarn
 
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
