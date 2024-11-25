@@ -1,5 +1,5 @@
 # Base de Python para la aplicación
-FROM python:3.11-slime AS python-base
+FROM --platform=linux/amd64 python:3.11.4-slim-bookworm as python
 
 # Establecer directorio de trabajo
 WORKDIR /app
