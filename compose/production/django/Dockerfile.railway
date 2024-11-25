@@ -18,9 +18,8 @@ RUN apk update && apk add --no-cache \
     postgresql-dev \
     curl \
     bash && \
-    # Agregar fuente de NodeSource
-    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apk add --no-cache nodejs npm
+    # Instalar Node.js directamente desde los repositorios de Alpine
+    apk add --no-cache nodejs=22.0.0-r0 npm=10.7.0-r0
 
 # Verificar la versión de Node.js instalada
 RUN node --version && npm --version
