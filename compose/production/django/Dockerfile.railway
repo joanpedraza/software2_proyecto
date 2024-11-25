@@ -42,27 +42,24 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 COPY ./frontend ./frontend/
 COPY ./static ./static
 
-#WORKDIR /app/frontend
-COPY ./package.json ./yarn.lock ./
-RUN yarn install --frozen-lockfile
-#RUN yarn run build
-RUN yarn run build
-
-# WORKDIR /app
+# WORKDIR /app/frontend
 # COPY ./package.json ./yarn.lock ./
 # RUN yarn install --frozen-lockfile
 # RUN yarn run build
 
-# Copiar los archivos de salida de la compilación (si es necesario)
+WORKDIR /app
+COPY ./package.json ./yarn.lock ./
+RUN yarn install --frozen-lockfile
+RUN yarn run build
 
-#COPY ./static/frontend/bundle.js ./static/frontend/bundle.js.map  /app/frontend/
+# Copiar los archivos de salida de la compilación (si es necesario)
+# COPY ./static/frontend/bundle.js ./static/frontend/bundle.js.map  /app/frontend/
 # ---- Finalizar imagen ---- #
 FROM python-base
 
 # Copiar archivos compilados de Node.js (Tailwind y SCSS)
 #COPY --from=node-build /app/theme/static /app/theme/static
 COPY --from=node-build /app/static /app/static
-#COPY --from=node-build  ./static/frontend/bundle.js ./static/frontend/bundle.js.map  /app/frontend/
 
 # Copiar el resto del proyecto
 COPY . /app/
