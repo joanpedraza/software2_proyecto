@@ -58,13 +58,16 @@ COPY --from=node-build /app/static /app/static
 # Copiar el resto del proyecto
 COPY . /app/
 
-RUN apk update && apk add --no-cache npm && npm install -g npm@latest
+RUN apk update && apk add --no-cache npm && npm install -g npm@latest && apk add --no-cache yarn
 
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
 RUN npm run build
 
 WORKDIR /app
+
+RUN yarn install --frozen-lockfile
+RUN yarn run build
 
 # Asegurar que Django detecte npm
 ENV PATH="/usr/bin:$PATH"
@@ -79,8 +82,9 @@ RUN python manage.py collectstatic --noinput
 # Copiar el entrypoint.sh
 COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
 
-# Configuración de Nginx
+# Copiar configuración de Nginx y Supervisor
 COPY ./compose/production/nginx.conf /etc/nginx/nginx.conf
+COPY ./compose/production/supervisord.conf /etc/supervisord.conf
 
 # Configuración del puerto
 EXPOSE 8000 80
