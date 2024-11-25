@@ -40,20 +40,14 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
-COPY ./static ./static
-
-# WORKDIR /app/frontend
-# COPY ./package.json ./yarn.lock ./
-# RUN yarn install --frozen-lockfile
-# RUN yarn run build
-
-WORKDIR /app
+WORKDIR /app/frontend
 COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile
 RUN yarn run build
 
+WORKDIR /app
 # Copiar los archivos de salida de la compilación (si es necesario)
-# COPY ./static/frontend/bundle.js ./static/frontend/bundle.js.map  /app/frontend/
+COPY ./static ./static
 # ---- Finalizar imagen ---- #
 FROM python-base
 
