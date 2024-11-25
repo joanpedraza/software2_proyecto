@@ -9,14 +9,18 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     BUILD_ENV=production
 
-# Instalar dependencias del sistema necesarias
-# Instalar dependencias del sistema necesarias y configurar Node.js desde NodeSource
+# Instalar dependencias necesarias del sistema
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
-  build-essential \
-  # psycopg2 dependencies
-  libpq-dev
+    # dependencies for building Python packages
+    build-essential \
+    # psycopg2 dependencies
+    libpq-dev \
+    # Herramientas necesarias para Node.js
+    curl \
+    gnupg \
+    ca-certificates
 
+    
 ARG NODE_MAJOR=22
 RUN mkdir -p /etc/apt/keyrings && \
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
