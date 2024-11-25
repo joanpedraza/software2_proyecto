@@ -62,6 +62,8 @@ RUN apk add --no-cache bash nodejs-current npm && \
     npm install -g n && \
     bash -c "n 22.0.0" && \
     apk del nodejs-current
+    
+RUN apk update && apk add --no-cache npm && npm install -g npm@latest && apk add --no-cache yarn
 
 WORKDIR /app/theme/static_src
 RUN npm install --frozen-lockfile
