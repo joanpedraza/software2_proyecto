@@ -21,14 +21,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ca-certificates
 
 
-ARG NODE_MAJOR=22
-RUN mkdir -p /etc/apt/keyrings && \
-  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
-  apt-get update && apt-get install nodejs -y
-
-RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl gnupg ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest && \
+    npm install -g yarn && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Verificar la versión de Node.js instalada
 RUN node --version && npm --version
@@ -80,12 +80,12 @@ COPY . /app/
 #     bash -c "n 22.0.0" && \
 #     apk del nodejs-current
     
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    npm && \
-    npm install -g npm@latest && \
-    apt-get install -y --no-install-recommends \
-    yarn && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     npm && \
+#     npm install -g npm@latest && \
+#     apt-get install -y --no-install-recommends \
+#     yarn && \
+#     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 WORKDIR /app/theme/static_src
