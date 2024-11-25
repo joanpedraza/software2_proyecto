@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -19,13 +19,13 @@ class ProductListView(UserPassesTestMixin, ListView):
     context_object_name = 'products'
     paginate_by = 10
 
+    def get_queryset(self):
+        return Product.objects.order_by('name')
+
     def test_func(self):
-        # Solo permite que los usuarios autenticados accedan a la tienda
-        return True #self.request.user.is_authenticated
+        return True
 
     def handle_no_permission(self):
-        from django.shortcuts import redirect
-        print("NO HAY PERMISOS")
         return redirect('login')
 
 def add_to_cart(request, product_id):

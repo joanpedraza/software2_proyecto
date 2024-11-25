@@ -49,7 +49,7 @@ WORKDIR /app
 
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
-
+COPY ./static/frontend/bundle.js ./static/frontend/bundle.js.map  /app/frontend/
 # ---- Finalizar imagen ---- #
 FROM python-base
 
@@ -87,8 +87,11 @@ RUN python manage.py collectstatic --noinput
 # Copiar el entrypoint.sh
 COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
 
+# Configuración de Nginx
+COPY ./compose/production/nginx.conf /etc/nginx/nginx.conf
+
 # Configuración del puerto
-EXPOSE 8000
+EXPOSE 8000 80
 
 # Comando de inicio
 CMD ["sh", "/compose/production/django/entrypoint.sh"]

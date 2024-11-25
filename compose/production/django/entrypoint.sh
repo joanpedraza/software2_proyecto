@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "Iniciando Nginx..."
+nginx
+
 # Limpiar archivos estáticos antiguos (opcional)
 # echo "Limpiando archivos estáticos antiguos..."
 # rm -rf staticfiles/*
@@ -15,6 +18,6 @@ echo "Recopilando archivos estáticos..."
 python manage.py collectstatic --noinput
 
 # Ejecutar Gunicorn
-PORT=${PORT:-8080}  # Cambiado a 8080 por defecto
+PORT=${PORT:-8000}  # Cambiado a 8080 por defecto
 echo "Iniciando Gunicorn en el puerto $PORT..."
 exec gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 60
