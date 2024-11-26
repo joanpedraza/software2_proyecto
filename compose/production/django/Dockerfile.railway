@@ -95,6 +95,8 @@ RUN python manage.py collectstatic --noinput
 
 #RUN ls /var/lib/containers/railwayapp/bind-mounts/c4830ce2-7cb4-43d3-940c-cc5d4aa3de7a/vol_zumrjcntno8z55j3 -la
 
+RUN mkdir -p /mnt/data
+
 RUN touch /mnt/data/test.txt
 
 RUN ls /mnt/data 
