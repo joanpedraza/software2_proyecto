@@ -47,7 +47,7 @@ def order_history(request):
         return HttpResponseBadRequest("Only GET requests are allowed.")
 
 
-    api_url = [f"{settings.API_BASE_URL}/customers/api/orders/"]
+    api_url = [f"{settings.API_BASE_URL}/customers/api/orders/", f"http://20.197.225.198:8080/api/pedido/list"]
 
     orders = []
 
