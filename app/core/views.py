@@ -7,15 +7,11 @@ from app.customers.models import Customer
 
 # Create your views here.
 def home(request):
-    return render(request, 'core/home.html')
-
-@login_required
-def products(request):
-    return render(request, 'core/products.html')
+    return redirect('products_list')
 
 def exit(request):
     logout(request)
-    return redirect('home')
+    return redirect('products_list')
 
 def register(request):
     data = {
