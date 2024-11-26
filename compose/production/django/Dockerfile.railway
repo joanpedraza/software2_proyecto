@@ -110,6 +110,7 @@ RUN python manage.py collectstatic --noinput
 # Copiar el entrypoint.sh
 COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
 
+RUN mkdir -p /app/logs
 RUN which supervisord
 
 # Copiar configuración de Nginx y Supervisor
