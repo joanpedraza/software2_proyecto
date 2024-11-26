@@ -30,6 +30,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y nginx
+
+
 # Verificar la versión de Node.js instalada
 RUN node --version && npm --version
 
