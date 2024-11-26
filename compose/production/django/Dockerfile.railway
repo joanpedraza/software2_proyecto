@@ -118,7 +118,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN   tree -L 3 -I 'node_modules'
 
 
-COPY ./staticfiles /app/staticfiles/
+#COPY ./staticfiles /app/staticfiles/
 
 # Crear el directorio de medios si no existe
 RUN mkdir -p /app/media
