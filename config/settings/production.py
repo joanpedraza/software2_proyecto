@@ -36,5 +36,5 @@ API_BASE_URL = env("API_BASE_URL", default="https://invencloud.up.railway.app")
 
 WHITE_NOISE_BROTLI = True 
 
-MEDIA_URL = '/staticfiles/'
-MEDIA_ROOT = BASE_DIR / 'staticfiles'
+# MEDIA_URL = '/staticfiles/'
+# MEDIA_ROOT = BASE_DIR / 'staticfiles'
