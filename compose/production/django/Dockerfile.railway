@@ -91,6 +91,13 @@ RUN python manage.py tailwind build
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
 
+RUN chmod -R 777 /var/lib/containers/railwayapp/bind-mounts/c4830ce2-7cb4-43d3-940c-cc5d4aa3de7a/vol_zumrjcntno8z55j3
+
+RUN ls /var/lib/containers/railwayapp/bind-mounts/c4830ce2-7cb4-43d3-940c-cc5d4aa3de7a/vol_zumrjcntno8z55j3 -la
+
+# Copiar las imágenes desde el volumen montado a STATICFILES_DIRS
+COPY /var/lib/containers/railwayapp/bind-mounts/c4830ce2-7cb4-43d3-940c-cc5d4aa3de7a/vol_zumrjcntno8z55j3 /app/staticfiles/product_images/
+
 # Instalar tree junto con otras herramientas necesarias
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tree && \
