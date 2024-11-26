@@ -6,8 +6,8 @@ from .models import Cart, CartItem, Customer, Order, Product, ProductOrder, Supe
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
-from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView, csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
 from .serializer import OrderSerializer
@@ -125,9 +125,9 @@ class OrderListView(UserPassesTestMixin, ListView):
     
 
 # Serializers
+@csrf_exempt 
 class OrderAPIView(APIView):
-    # Restringe los métodos permitidos
-    http_method_names = ['get']  # Solo permite solicitudes GET
+    permission_classes = [AllowAny]  # Permite el acceso sin autenticación
 
     def get(self, request):
         orders = Order.objects.prefetch_related(
