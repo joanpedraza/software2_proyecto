@@ -48,6 +48,7 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
+WORKDIR /app/frontend
 COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile
 RUN yarn run build
