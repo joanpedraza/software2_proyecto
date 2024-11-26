@@ -2,6 +2,7 @@ from .base import *
 
 # Debug desactivado
 DEBUG = False
+ENVIROMENT = "production"
 
 # Seguridad
 SECURE_BROWSER_XSS_FILTER = True
@@ -33,7 +34,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 API_BASE_URL = env("API_BASE_URL", default="https://invencloud.up.railway.app")
 
-# Media Files (uploaded from users)
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
 WHITE_NOISE_BROTLI = True 
+
+MEDIA_URL = '/staticfiles/'
+MEDIA_ROOT = BASE_DIR / 'staticfiles'

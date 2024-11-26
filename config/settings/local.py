@@ -2,6 +2,8 @@ from .base import *
 
 DEBUG = True
 
+ENVIROMENT = "local"
+
 INSTALLED_APPS += [
     'django_browser_reload',
 ]
