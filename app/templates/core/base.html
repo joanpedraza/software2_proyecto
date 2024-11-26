@@ -17,82 +17,36 @@
 </head>
 <body class=" overflow-x-hidden bg-white">
 
-        <nav class="container  relative mx-auto p-6 ">
-        
-          <!-- Flex Container for Nav Items -->
-           <div class="flex items-center justify-between space-x-20 my-6">
+  <nav class="container relative mx-auto py-4">
+    <!-- Flex Container for Nav Items -->
+    <div class="flex items-center justify-between space-x-20 my-2">
+        <!-- Logo -->
+        <div class="z-30">
+            <img class="w-[150px] h-[150px] bg-danger" src="{% static 'images/invenCloudLogo.svg' %}" alt="" id="logo">
+        </div>
 
-            <!-- logo -->
-             <div class="z-30">
-              {% load static %}
-             <img  class="w-[150px] h-[150px] min"   src="{% static 'images/invenCloudLogo.svg' %}" alt="" id="logo">
+        <!-- MenuItems -->
+        <div class="hidden items-center space-x-6 uppercase text-gray-500 md:flex">
+            <a class="tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'products_list' %}">Inicio</a>
+            <a class="tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'order_list' %}">Pedidos</a>
 
-        
-             </div>
-
-             <!-- MenuItems -->
-
-             <div class="hidden items-center space-x-10 uppercase text-gray-500 md:flex">
-
-                 
-              <a class="tracking-widest no-underline text-gray-500 hover:text-green-800"  href="{% url 'products_list' %}">Inicio</a>
-                  
-                  
-              <a class=" tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'order_list' %}">Pedidos</a>
-           
             {% if request.user.is_authenticated %}
-              
-                  <a class="tracking-widest text-gray-500 hover:text-green-800" href="{% url 'exit' %}">Cerrar sesion</a>
-              
-              {% else %}
-            
-              
-                  <a class="tracking-widest   no-underline text-gray-500  hover:text-green-800 " href="{% url 'register' %}">Register</a>
-
-                  <a class=" text-white px-8 py-2 no-underline bg-green-800 border-2 rounded-lg shadow-md border-green-800  hover:opacity-80    duration-300 ease-in-out" href="{% url 'login' %}">Log In</a>
-              
+            <a class="tracking-widest text-gray-500 hover:text-green-800" href="{% url 'exit' %}">Cerrar sesión</a>
+            {% else %}
+            <a class="tracking-widest no-underline text-gray-500 hover:text-green-800" href="{% url 'register' %}">Register</a>
+            <a class="text-white px-6 py-1 no-underline bg-green-800 border-2 rounded-lg shadow-md border-green-800 hover:opacity-80 duration-300 ease-in-out" href="{% url 'login' %}">Log In</a>
             {% endif %}
-          
+        </div>
 
+        <!-- Hamburger Button -->
+        <button class="z-30 block md:hidden focus:outline-none hamburger" id="hamburger-menu-btn">
+            <span class="hamburger-top"></span>
+            <span class="hamburger-middle"></span>
+            <span class="hamburger-bottom"></span>
+        </button>
+    </div>
+</nav>
 
-             </div>
-
-             <!-- Hamburger Button -->
-
-             <button class="z-30 block md:hidden focus:outline-none hamburger   " id="hamburger-menu-btn">
-    
-              <span class="hamburger-top "></span>
-              <span class="hamburger-middle "></span>
-              <span class="hamburger-bottom  "></span>
-          
-             </button>
-              
-           </div>
-            
-           <!-- Mobile Menu  -->
-
-
-           <div id="mobile-menu" class="fixed inset-0 z-20 hidden flex-col  justify-center items-center self-end w-full h-full m-h-screen px-6 py-1 pt-24 pb-4 tracking-widest text-white uppercase divide-y divide-gray-500  bg-gray-700 opacity-40">
-              
-            <div class="w-full py-3 text-center">
-              <a    class="no-underline block text-gray-300  hover:text-white" href="{% url 'products_list' %}">Products</a>
-            </div>
-             
-            <div class="w-full py-3 text-center text-white">
-              <a   class="  no-underline block  text-gray-300 hover:text-white"  href="{% url 'register' %}">Sign in </a>
-            </div>
-
-            <div class="w-full py-3 text-center text-white">
-              <a   class="  no-underline block text-gray-300 hover:text-white"  href="{% url 'login' %}">Log in</a>
-            </div>
-
-
-
-           </div>
-
-
-  
-          </nav>
 
           {% block content %}
           {% endblock %}

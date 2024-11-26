@@ -126,9 +126,13 @@ class OrderListView(UserPassesTestMixin, ListView):
 
 # Serializers
 class OrderAPIView(APIView):
-    def get(self, request):
+    # Restringe los métodos permitidos
+    http_method_names = ['get']  # Solo permite solicitudes GET
 
-        orders = Order.objects.prefetch_related('productorder_set__product', 'customer__user')        
+    def get(self, request):
+        orders = Order.objects.prefetch_related(
+            'productorder_set__product', 'customer__user'
+        )
 
         serializer = OrderSerializer(orders, many=True)
         serialized_data = serializer.data
