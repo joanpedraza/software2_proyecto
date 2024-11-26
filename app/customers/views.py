@@ -127,57 +127,10 @@ class OrderListView(UserPassesTestMixin, ListView):
 # Serializers
 class OrderAPIView(APIView):
     def get(self, request):
-        #Filtrado
-        customer_name = request.GET.get('customer') 
-        store = request.GET.get('store')
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
-        min_price = request.GET.get('min_price')
-        max_price = request.GET.get('max_price')
 
-        orders = Order.objects.prefetch_related('productorder_set__product', 'customer__user')
-
-        if customer_name:
-            orders = orders.filter(
-                customer__user__first_name__icontains=customer_name
-            ) | orders.filter(
-                customer__user__last_name__icontains=customer_name
-            )
-        
-        if start_date:
-            try:
-                start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')  
-                orders = orders.filter(date__gte=start_date_obj)
-            except ValueError:
-                pass  
-        
-        if end_date:
-            try:
-                end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')  
-                orders = orders.filter(date__lte=end_date_obj)
-            except ValueError:
-                pass  
-        
-        if min_price:
-            try:
-                min_price_val = float(min_price)  
-                orders = orders.filter(total_price__gte=min_price_val)
-            except ValueError:
-                pass  
-
-        if max_price:
-            try:
-                max_price_val = float(max_price)  
-                orders = orders.filter(total_price__lte=max_price_val)
-            except ValueError:
-                pass  
+        orders = Order.objects.prefetch_related('productorder_set__product', 'customer__user')        
 
         serializer = OrderSerializer(orders, many=True)
         serialized_data = serializer.data
-
-        if store:
-            serialized_data = [
-                order for order in serialized_data if store.lower() in order['store'].lower()
-            ]
 
         return Response(serialized_data, status=status.HTTP_200_OK)

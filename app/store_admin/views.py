@@ -52,19 +52,10 @@ def order_history(request):
     selected_min_price = request.GET.get('min_price')
     selected_max_price = request.GET.get('max_price')
 
-    params = {
-        'customer': selected_customer,
-        'store': selected_store,        
-        'start_date': selected_start_date,
-        'end_date': selected_end_date,
-        'min_price': selected_min_price,
-        'max_price': selected_max_price,
-    }
-
-    for api in api_url:    
+    for api in api_url:
 
         try:
-            response = requests.get(api, params=params)
+            response = requests.get(api)
             response.raise_for_status()  
             orders = orders + response.json()  
         except requests.RequestException as e:
@@ -72,6 +63,59 @@ def order_history(request):
             print(f"Error al conectar con la API: {e}")
 
         customers = Customer.objects.prefetch_related('user').all()
+
+    # Filtros luego de recibir el json
+    if selected_customer:
+        orders = [
+            order for order in orders
+            if selected_customer.lower() in order.get('customer_name', '').lower()
+        ]
+
+    if selected_store:
+        orders = [
+            order for order in orders
+            if selected_store.lower() in order.get('store', '').lower()
+        ]
+
+    if selected_start_date:
+        try:
+            start_date_obj = datetime.strptime(selected_start_date.strip(), '%Y-%m-%d')
+            orders = [
+                order for order in orders
+                if 'date' in order and datetime.strptime(order['date'], '%Y-%m-%d') >= start_date_obj
+            ]
+        except ValueError as e:
+            print(f"Error al procesar fecha de inicio: {e}")
+
+    if selected_end_date:
+        try:
+            end_date_obj = datetime.strptime(selected_end_date.strip(), '%Y-%m-%d')
+            orders = [
+                order for order in orders
+                if 'date' in order and datetime.strptime(order['date'], '%Y-%m-%d') <= end_date_obj
+            ]
+        except ValueError as e:
+            print(f"Error al procesar fecha de fin: {e}")
+
+    if selected_min_price:
+        try:
+            min_price_val = float(selected_min_price)
+            orders = [
+                order for order in orders
+                if float(order.get('total_price', 0)) >= min_price_val
+            ]
+        except ValueError:
+            pass
+
+    if selected_max_price:
+        try:
+            max_price_val = float(selected_max_price)
+            orders = [
+                order for order in orders
+                if float(order.get('total_price', 0)) <= max_price_val
+            ]
+        except ValueError:
+            pass
 
     return render(request, 'store_admin/orders.html', {
         'orders': orders,
