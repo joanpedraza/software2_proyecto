@@ -84,6 +84,7 @@ COPY ./requirements.txt ./production.txt /app/
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r production.txt
 
+VOLUME /app/media
 
 # Ejecutar la construcción de Tailwind
 RUN python manage.py tailwind build
