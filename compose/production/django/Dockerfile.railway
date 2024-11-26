@@ -94,6 +94,8 @@ RUN yarn run build
 ENV PATH="/usr/bin:$PATH"
 ENV NPM_BIN_PATH="/usr/bin/npm"
 
+COPY ./static ./static
+
 # Actualizar pip
 RUN pip install --upgrade pip
 
@@ -109,6 +111,12 @@ RUN python manage.py tailwind build
 
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
+
+# Crear el directorio de medios si no existe
+RUN mkdir -p /app/media
+
+# Copiar los archivos estáticos recopilados a la ubicación correcta
+COPY ./staticfiles /app/staticfiles/
 
 # Copiar el entrypoint.sh
 COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
