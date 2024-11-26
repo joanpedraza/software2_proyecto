@@ -50,6 +50,7 @@ def order_history(request):
     api_url = [f"{settings.API_BASE_URL}/customers/api/orders/", f"http://20.197.225.198:8080/api/pedido/list"]
 
     orders = []
+    customers = set()
 
     selected_customer = request.GET.get('customer')
     selected_store = request.GET.get('sucursal')    
@@ -70,17 +71,22 @@ def order_history(request):
 
         customers = Customer.objects.prefetch_related('user').all()
 
-    # Filtros luego de recibir el json
+    #Obtener los clientes que han realizado pedidos
+    for order in orders:
+        if 'customer_name' in order:
+                    customers.add(order['customer_name'])    
+
+    # Filtros luego de recibir el json, que manejen Nones
     if selected_customer:
         orders = [
             order for order in orders
-            if selected_customer.lower() in order.get('customer_name', '').lower()
+            if selected_customer.lower() in (order.get('customer_name') or '').lower()
         ]
 
     if selected_store:
         orders = [
             order for order in orders
-            if selected_store.lower() in order.get('store', '').lower()
+            if selected_store.lower() in (order.get('store') or '').lower()
         ]
 
     if selected_start_date:
@@ -88,7 +94,7 @@ def order_history(request):
             start_date_obj = datetime.strptime(selected_start_date.strip(), '%Y-%m-%d')
             orders = [
                 order for order in orders
-                if 'date' in order and datetime.strptime(order['date'], '%Y-%m-%d') >= start_date_obj
+                if order.get('date') and datetime.strptime(order['date'], '%Y-%m-%d') >= start_date_obj
             ]
         except ValueError as e:
             print(f"Error al procesar fecha de inicio: {e}")
@@ -98,7 +104,7 @@ def order_history(request):
             end_date_obj = datetime.strptime(selected_end_date.strip(), '%Y-%m-%d')
             orders = [
                 order for order in orders
-                if 'date' in order and datetime.strptime(order['date'], '%Y-%m-%d') <= end_date_obj
+                if order.get('date') and datetime.strptime(order['date'], '%Y-%m-%d') <= end_date_obj
             ]
         except ValueError as e:
             print(f"Error al procesar fecha de fin: {e}")
@@ -108,20 +114,20 @@ def order_history(request):
             min_price_val = float(selected_min_price)
             orders = [
                 order for order in orders
-                if float(order.get('total_price', 0)) >= min_price_val
+                if float(order.get('total_price') or 0) >= min_price_val
             ]
         except ValueError:
-            pass
+            print("Error al procesar el precio mínimo.")
 
     if selected_max_price:
         try:
             max_price_val = float(selected_max_price)
             orders = [
                 order for order in orders
-                if float(order.get('total_price', 0)) <= max_price_val
+                if float(order.get('total_price') or 0) <= max_price_val
             ]
         except ValueError:
-            pass
+            print("Error al procesar el precio máximo.")
 
     return render(request, 'store_admin/orders.html', {
         'orders': orders,
