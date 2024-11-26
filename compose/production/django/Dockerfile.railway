@@ -95,7 +95,7 @@ RUN python manage.py collectstatic --noinput
 
 RUN ls /var/lib/containers/railwayapp/bind-mounts/c4830ce2-7cb4-43d3-940c-cc5d4aa3de7a/vol_zumrjcntno8z55j3 -la
 
-RUN ls /app/media
+RUN ls /mnt/data 
 
 # Copiar las imágenes desde el volumen montado a STATICFILES_DIRS
 #COPY /var/lib/containers/railwayapp/bind-mounts/c4830ce2-7cb4-43d3-940c-cc5d4aa3de7a/vol_zumrjcntno8z55j3 /app/staticfiles/product_images/
