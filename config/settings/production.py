@@ -32,3 +32,7 @@ CSRF_TRUSTED_ORIGINS = [
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 API_BASE_URL = env("API_BASE_URL", default="https://invencloud.up.railway.app")
+
+MEDIA_ROOT = '/mnt/volumename/media'
+MEDIA_URL = '/media/'
+WHITENOISE_USE_FINDERS = True

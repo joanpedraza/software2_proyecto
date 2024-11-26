@@ -56,27 +56,8 @@ RUN yarn run build
 WORKDIR /app
 # Copiar los archivos de salida de la compilación (si es necesario)
 COPY ./static ./static
-# ---- Finalizar imagen ---- #
-# FROM python-base
 
-# Copiar archivos compilados de Node.js (Tailwind y SCSS)
-#COPY --from=node-build /app/theme/static /app/theme/static
-#COPY --from=node-build /app/static /app/static
-
-# Copiar el resto del proyecto
 COPY . /app/
-
-# RUN apk add --no-cache bash nodejs-current npm && \
-#     npm install -g n && \
-#     bash -c "n 22.0.0" && \
-#     apk del nodejs-current
-    
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     npm && \
-#     npm install -g npm@latest && \
-#     apt-get install -y --no-install-recommends \
-#     yarn && \
-#     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 WORKDIR /app/theme/static_src
@@ -119,10 +100,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN   tree -L 3 -I 'node_modules'
 
 
-#COPY ./staticfiles /app/staticfiles/
-
-# Crear el directorio de medios si no existe
-RUN mkdir -p /app/media
+COPY ./staticfiles /app/staticfiles/
 
 # Copiar los archivos estáticos recopilados a la ubicación correcta
 
