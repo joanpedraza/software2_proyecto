@@ -41,7 +41,9 @@ def inventory(request):
 
 @admin_required
 def order_history(request):
-    api_url = f"{settings.API_BASE_URL}/customers/api/orders/"
+    api_url = [f"{settings.API_BASE_URL}/customers/api/orders/", f"http://20.197.225.198:8080/api/pedido/list"]
+
+    orders = []
 
     selected_customer = request.GET.get('customer')
     selected_store = request.GET.get('sucursal')    
@@ -59,15 +61,17 @@ def order_history(request):
         'max_price': selected_max_price,
     }
 
-    try:
-        response = requests.get(api_url, params=params)
-        response.raise_for_status()  
-        orders = response.json()  
-    except requests.RequestException as e:
-        orders = []  
-        print(f"Error al conectar con la API: {e}")
+    for api in api_url:    
 
-    customers = Customer.objects.prefetch_related('user').all()
+        try:
+            response = requests.get(api, params=params)
+            response.raise_for_status()  
+            orders = orders + response.json()  
+        except requests.RequestException as e:
+            #orders = []  
+            print(f"Error al conectar con la API: {e}")
+
+        customers = Customer.objects.prefetch_related('user').all()
 
     return render(request, 'store_admin/orders.html', {
         'orders': orders,
