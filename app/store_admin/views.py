@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from app.store_admin.models import Product, Provider
@@ -41,7 +42,12 @@ def inventory(request):
 
 @admin_required
 def order_history(request):
-    api_url = [f"{settings.API_BASE_URL}/customers/api/orders/", f"http://20.197.225.198:8080/api/pedido/list"]
+    
+    if request.method != 'GET':
+        return HttpResponseBadRequest("Only GET requests are allowed.")
+
+
+    api_url = [f"{settings.API_BASE_URL}/customers/api/orders/"]
 
     orders = []
 
