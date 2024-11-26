@@ -36,7 +36,7 @@
         {% for product in products %}
             <div class="w-60 p-2 bg-white rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl mt-4 mb-4 lg:mt-0">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">
+                    <img src="{% static product.image.url %}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">
                 {% else %}
                     <img src="{% static 'images/default_product.svg' %}" alt="{{ product.name }}" class="h-40 object-cover rounded-xl">  <!-- Cambia a una imagen por defecto -->
                 {% endif %}
