@@ -36,5 +36,15 @@ API_BASE_URL = env("API_BASE_URL", default="https://invencloud.up.railway.app")
 
 WHITE_NOISE_BROTLI = True 
 
-# MEDIA_URL = '/staticfiles/'
-# MEDIA_ROOT = BASE_DIR / 'staticfiles'
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default='AKXXXXXXXXXOOAHL')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default='qdnknt66ZsdrR')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default='test-bucket')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
