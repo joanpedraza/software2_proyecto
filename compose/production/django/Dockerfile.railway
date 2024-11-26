@@ -40,20 +40,20 @@ RUN node --version && npm --version
 # FROM node:20.18.1-alpine AS node-build
 
 # # Establecer directorio de trabajo
-# WORKDIR /app
+WORKDIR /app
 
-# # Copiar archivos necesarios para Tailwind
-# COPY ./theme/static_src/package.json ./theme/static_src/
-# COPY ./theme/static_src/postcss.config.js ./theme/static_src/
-# COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
-# COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
+# Copiar archivos necesarios para Tailwind
+COPY ./theme/static_src/package.json ./theme/static_src/
+COPY ./theme/static_src/postcss.config.js ./theme/static_src/
+COPY ./theme/static_src/tailwind.config.js ./theme/static_src/
+COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
-# WORKDIR /app/frontend
-# COPY ./package.json ./yarn.lock ./
-# RUN yarn install --frozen-lockfile
-# RUN yarn run build
+WORKDIR /app/frontend
+COPY ./package.json ./yarn.lock ./
+RUN yarn install --frozen-lockfile
+RUN yarn run build
 
 WORKDIR /app
 # Copiar los archivos de salida de la compilación (si es necesario)
