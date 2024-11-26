@@ -50,7 +50,6 @@ COPY ./theme/static_src/src/styles.css ./theme/static_src/src/
 
 # Copiar el directorio frontend
 COPY ./frontend ./frontend/
-WORKDIR /app/frontend
 COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile
 RUN yarn run build
@@ -111,12 +110,12 @@ RUN python manage.py tailwind build
 
 # Recoger archivos estáticos
 RUN python manage.py collectstatic --noinput
+COPY ./staticfiles /app/staticfiles/
 
 # Crear el directorio de medios si no existe
 RUN mkdir -p /app/media
 
 # Copiar los archivos estáticos recopilados a la ubicación correcta
-COPY ./staticfiles /app/staticfiles/
 
 # Copiar el entrypoint.sh
 COPY ./compose/production/django/entrypoint.sh /compose/production/django/entrypoint.sh
