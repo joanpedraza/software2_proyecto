@@ -125,7 +125,6 @@ class OrderListView(UserPassesTestMixin, ListView):
     
 
 # Serializers
-@csrf_exempt 
 class OrderAPIView(APIView):
     permission_classes = [AllowAny]  # Permite el acceso sin autenticación
 
