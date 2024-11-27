@@ -69,7 +69,6 @@ def order_history(request):
             #orders = []  
             print(f"Error al conectar con la API: {e}")
 
-        customers = Customer.objects.prefetch_related('user').all()
 
     #Obtener los clientes que han realizado pedidos
     for order in orders:
