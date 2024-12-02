@@ -42,16 +42,18 @@ def inventory(request):
 
 @admin_required
 def order_history(request):
-    
     if request.method != 'GET':
         return HttpResponseBadRequest("Only GET requests are allowed.")
 
-
-    api_url = [f"{settings.API_BASE_URL}/customers/api/orders/", f"http://20.197.225.198:8080/api/pedido/list"]
+    api_url = [
+        f"{settings.API_BASE_URL}/customers/api/orders/",
+        f"http://20.197.225.198:8080/api/pedido/list"
+    ]
 
     orders = []
     customers = set()
 
+    # Parámetros del filtro
     selected_customer = request.GET.get('customer')
     selected_store = request.GET.get('sucursal')    
     selected_start_date = request.GET.get('start_date')
@@ -60,22 +62,24 @@ def order_history(request):
     selected_max_price = request.GET.get('max_price')
 
     for api in api_url:
-
         try:
-            response = requests.get(api)
-            response.raise_for_status()  
-            orders = orders + response.json()  
+            response = requests.get(api, timeout=5)  # Agregar timeout
+            response.raise_for_status()
+            api_orders = response.json()
+            if isinstance(api_orders, list):  # Validar formato esperado
+                orders.extend(api_orders)
+            else:
+                print(f"Respuesta inesperada de la API: {api}")
         except requests.RequestException as e:
-            #orders = []  
-            print(f"Error al conectar con la API: {e}")
+            print(f"Error al conectar con la API {api}: {e}")
+            # Continuar sin detenerse por fallos en una API
 
-
-    #Obtener los clientes que han realizado pedidos
+    # Obtener clientes únicos
     for order in orders:
         if 'customer_name' in order:
-                    customers.add(order['customer_name'])    
+            customers.add(order['customer_name'])
 
-    # Filtros luego de recibir el json, que manejen Nones
+    # Aplicar filtros
     if selected_customer:
         orders = [
             order for order in orders
